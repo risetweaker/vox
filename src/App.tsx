@@ -29,8 +29,16 @@ import {
   Undo2,
   X,
 } from "lucide-react";
-import type { Session } from "@supabase/supabase-js";
-import { authConfigured, signInWithGoogle, signInWithPassword, supabase } from "./auth";
+import {
+  canSignInFromCurrentContext,
+  clearIdentitySession,
+  getCurrentSession,
+  isExpiredIdentitySessionError,
+  refreshIdentitySession,
+  signInWithPassword,
+  signOutIdentity,
+  type VoxSession,
+} from "./auth";
 import { buildApplyPlan, executeApplyPlan, type ApplyPlan, type BatchExecution, type BatchItemResult, type BatchItemStatus } from "./batch";
 import { formatCount, parseCatalog, type Catalog, type CatalogTier, type Tweak } from "./catalog";
 
@@ -47,6 +55,7 @@ type PendingApply = { tier: CatalogTier; plan: ApplyPlan; singleItem?: string };
 
 const ACTION_ID = "reduce-ui-motion";
 const EXTERNAL_SITE = "https://vox-tweaking-utility.netlify.app/";
+const ACCOUNT_SITE = `${EXTERNAL_SITE}login`;
 const FAQ_ITEMS = [
   {
     question: "What does VOX actually change?",
@@ -71,17 +80,17 @@ const FAQ_ITEMS = [
   {
     question: "What does Premium unlock?",
     answer:
-      "The Premium catalog is shown only to an account whose Supabase app metadata is explicitly marked premium by your trusted backend. VOX does not include payment handling or let users grant themselves a Premium role.",
+      "The Premium catalog is shown only to an account whose Netlify Identity profile is marked premium by your trusted account service. VOX does not include payment handling or let users grant themselves a Premium role.",
   },
   {
     question: "How do I create a VOX account?",
     answer:
-      "Choose Create one on the sign-in screen to open the VOX website. Account registration is handled there; this app does not invent or store a separate registration flow.",
+      "Choose Create one on the sign-in screen to open the VOX website's account page. Registration and email confirmation are handled there.",
   },
   {
     question: "Can I sign in with a username?",
     answer:
-      "This build supports Supabase email-and-password sign-in. Username-only sign-in needs a username lookup from the VOX website's authentication service, which is not available in this repository yet.",
+      "Sign in with the email address used to create your VOX account. The website's Identity service handles account credentials and confirmation.",
   },
   {
     question: "Does VOX disable security features?",
@@ -97,7 +106,7 @@ const NAV_ITEMS: { id: Page; label: string; icon: typeof Gauge }[] = [
   { id: "settings", label: "Settings", icon: Settings2 },
 ];
 
-function isPremiumSession(session: Session | null): boolean {
+function isPremiumSession(session: VoxSession | null): boolean {
   const metadata = session?.user.app_metadata;
   return metadata?.tier === "premium" || (Array.isArray(metadata?.roles) && metadata.roles.includes("premium"));
 }
@@ -106,7 +115,7 @@ function App() {
   const [page, setPage] = useState<Page>("tweaks");
   const [tier, setTier] = useState<CatalogTier>("free");
   const [catalogs, setCatalogs] = useState<Partial<Record<CatalogTier, Catalog>>>({});
-  const [session, setSession] = useState<Session | null>(null);
+  const [session, setSession] = useState<VoxSession | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [runtime, setRuntime] = useState<PlatformRuntime | null>(null);
   const [lastRun, setLastRun] = useState<ApplySummary | null>(null);
@@ -125,35 +134,46 @@ function App() {
 
   useEffect(() => {
     let active = true;
-    if (!supabase) {
-      setAuthLoading(false);
-      return () => {
-        active = false;
-      };
-    }
-    const { data } = supabase.auth.onAuthStateChange((_event, nextSession) => {
-      if (active) {
-        setSession(nextSession);
-        setAuthLoading(false);
-        if (nextSession) setError("");
-      }
-    });
-    void supabase.auth.getSession().then(({ data: sessionData, error: authError }) => {
-      if (!active) return;
-      if (authError) setError(authError.message);
-      else setSession(sessionData.session);
-      setAuthLoading(false);
+    void getCurrentSession().then((nextSession) => {
+      if (active) setSession(nextSession);
     }).catch((cause: unknown) => {
-      if (active) {
-        setError(errorMessage(cause));
-        setAuthLoading(false);
-      }
+      if (active) setError(errorMessage(cause));
+    }).finally(() => {
+      if (active) setAuthLoading(false);
     });
     return () => {
       active = false;
-      data.subscription.unsubscribe();
     };
   }, []);
+
+  useEffect(() => {
+    if (!session) return;
+    let active = true;
+    let timeout = 0;
+    async function refreshSession() {
+      try {
+        const nextSession = await refreshIdentitySession(session);
+        if (active) setSession(nextSession);
+      } catch (cause) {
+        if (!active) return;
+        if (isExpiredIdentitySessionError(cause)) {
+          clearIdentitySession();
+          setSession(null);
+        } else {
+          timeout = window.setTimeout(() => void refreshSession(), 30_000);
+        }
+        setError(errorMessage(cause));
+      }
+    }
+    timeout = window.setTimeout(
+      () => void refreshSession(),
+      Math.max(1_000, session.expiresAt - Date.now() - 60_000),
+    );
+    return () => {
+      active = false;
+      window.clearTimeout(timeout);
+    };
+  }, [session]);
 
   useEffect(() => {
     let active = true;
@@ -262,20 +282,15 @@ function App() {
     }
   }
 
-  async function signIn() {
-    setError("");
-    try {
-      await signInWithGoogle();
-    } catch (cause) {
-      setError(errorMessage(cause));
-    }
+  function openAccountSite() {
+    window.open(ACCOUNT_SITE, "_blank", "noopener,noreferrer");
   }
 
   async function signInWithEmail(email: string, password: string) {
     setError("");
     setBusy(true);
     try {
-      await signInWithPassword(email, password);
+      setSession(await signInWithPassword(email, password));
     } catch (cause) {
       setError(errorMessage(cause));
     } finally {
@@ -284,10 +299,18 @@ function App() {
   }
 
   async function signOut() {
-    if (!supabase) return;
-    const { error: signOutError } = await supabase.auth.signOut();
-    if (signOutError) setError(signOutError.message);
-    else setNotice("Signed out.");
+    if (!session) return;
+    setBusy(true);
+    setError("");
+    try {
+      await signOutIdentity(session);
+      setNotice("Signed out.");
+    } catch (cause) {
+      setError(errorMessage(cause));
+    } finally {
+      setSession(null);
+      setBusy(false);
+    }
   }
 
   async function refreshRuntime() {
@@ -414,12 +437,11 @@ function App() {
   if (authLoading) return <AuthLoading />;
   if (!session) {
     return <LoginScreen
-      authConfigured={authConfigured}
+      loginAvailable={canSignInFromCurrentContext()}
       busy={busy}
       error={error}
       onClearError={() => setError("")}
       onSignIn={(email, password) => void signInWithEmail(email, password)}
-      onSignInGoogle={() => void signIn()}
     />;
   }
 
@@ -431,7 +453,7 @@ function App() {
           <div><strong>VOX</strong><small>OPTIMIZE</small></div>
           <button className="icon-button mobile-close" aria-label="Close menu" onClick={() => setMenuOpen(false)}><X size={18} /></button>
         </div>
-        <button className="account-card" onClick={() => session ? void signOut() : void signIn()} disabled={!session && !authConfigured} title={session ? "Sign out" : "Sign in"}>
+        <button className="account-card" onClick={() => session ? void signOut() : openAccountSite()} title={session ? "Sign out" : "Open account page"}>
           <span className="avatar">{session?.user.email?.slice(0, 1).toUpperCase() ?? "V"}</span>
           <span className="account-copy"><strong>{session?.user.email ?? "Guest"}</strong><small>{premium ? "VOX Premium" : "VOX Free"}</small></span>
           <ChevronDown size={16} />
@@ -475,8 +497,8 @@ function App() {
                 <LogOut size={14} className="logout-icon" />
               </button>
             ) : (
-              <button className="button button-quiet button-small" onClick={() => void signIn()} disabled={!authConfigured} title={!authConfigured ? "Configure Supabase to enable sign-in" : "Sign in with Google"}>
-                <LockKeyhole size={14} /> {authConfigured ? "Sign in" : "Auth setup"}
+              <button className="button button-quiet button-small" onClick={openAccountSite} title="Open the VOX account page">
+                <LockKeyhole size={14} /> Account
               </button>
             )}
           </div>
@@ -511,7 +533,7 @@ function App() {
             onApplyOne={requestApplyOne}
             onUndo={() => void undoAction(ACTION_ID)}
             onUndoAction={(actionId) => void undoAction(actionId)}
-            onSignIn={() => void signIn()}
+            onSignIn={openAccountSite}
             lastRun={lastRun?.tier === tier ? lastRun : null}
             applyPlan={applyPlan}
             runtime={runtime}
@@ -522,7 +544,7 @@ function App() {
             session={session}
             premium={premium}
             runtime={runtime}
-            onSignIn={() => void signIn()}
+            onSignIn={openAccountSite}
             onSignOut={() => void signOut()}
           />}
         </div>
@@ -568,19 +590,17 @@ function AuthLoading() {
 }
 
 function LoginScreen({
-  authConfigured: configured,
+  loginAvailable,
   busy: isBusy,
   error: authError,
   onClearError,
   onSignIn,
-  onSignInGoogle,
 }: {
-  authConfigured: boolean;
+  loginAvailable: boolean;
   busy: boolean;
   error: string;
   onClearError: () => void;
   onSignIn: (email: string, password: string) => void;
-  onSignInGoogle: () => void;
 }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -628,19 +648,16 @@ function LoginScreen({
             <span>Password</span>
             <span className="auth-input-wrap"><LockKeyhole size={16} /><input type={showPassword ? "text" : "password"} autoComplete="current-password" required maxLength={256} value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Enter your password" /><button className="auth-password-toggle" type="button" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword((value) => !value)}>{showPassword ? <EyeOff size={16} /> : <Eye size={16} />}</button></span>
           </label>
-          <button className="button button-primary auth-submit" type="submit" disabled={isBusy || !configured}><LockKeyhole size={16} /> {isBusy ? "Signing in…" : "Sign in"} <ArrowUpRight size={15} /></button>
+          <button className="button button-primary auth-submit" type="submit" disabled={isBusy || !loginAvailable}><LockKeyhole size={16} /> {isBusy ? "Signing in…" : "Sign in"} <ArrowUpRight size={15} /></button>
         </form>
 
-        {!configured && <div className="auth-setup-note" role="status"><strong>Sign-in setup required</strong><span>Add the Supabase URL and public anon key to this build before email/password sign-in can work.</span></div>}
+        {!loginAvailable && <div className="auth-setup-note" role="status"><strong>Open the VOX app or website to sign in</strong><span>This browser preview cannot reach the VOX Identity service from its current origin.</span></div>}
 
-        <div className="auth-divider"><span /> <small>OR</small> <span /></div>
-        <button className="button button-quiet auth-google" type="button" disabled={isBusy || !configured} onClick={onSignInGoogle}><Sparkles size={16} /> Continue with Google</button>
-
-        <p className="auth-create">Don’t have an account? <a href={EXTERNAL_SITE} target="_blank" rel="noreferrer">Create one <ArrowUpRight size={13} /></a></p>
-        <p className="auth-account-note">Account creation is handled on the VOX website. Username-only sign-in needs a username lookup from its auth service; use your account email here.</p>
+        <p className="auth-create">Don’t have an account? <a href={ACCOUNT_SITE} target="_blank" rel="noreferrer">Create one <ArrowUpRight size={13} /></a></p>
+        <p className="auth-account-note">Account registration and email confirmation are handled on the VOX website.</p>
       </section>
     </div>
-    <div className="auth-site-link"><a href={EXTERNAL_SITE} target="_blank" rel="noreferrer">vox-tweaking-utility.netlify.app <ArrowUpRight size={13} /></a><span>Secure account sign-in by Supabase</span></div>
+    <div className="auth-site-link"><a href={EXTERNAL_SITE} target="_blank" rel="noreferrer">vox-tweaking-utility.netlify.app <ArrowUpRight size={13} /></a><span>Secure account sign-in by Netlify Identity</span></div>
   </main>;
 }
 
@@ -767,7 +784,7 @@ function Tweaks(props: {
         </div>
       </div>
 
-      {tier === "premium" && !premium ? <div className="locked-panel catalog-locked"><div className="lock-art"><LockKeyhole size={24} /></div><div className="eyebrow">PREMIUM LIBRARY</div><h2>Premium access is tied to your account</h2><p>Sign in with the configured provider. Premium access is granted only by trusted server-side account metadata.</p><div className="locked-actions"><button className="button button-primary" disabled={!authConfigured} onClick={onSignIn}><LockKeyhole size={15} /> {authConfigured ? "Sign in to continue" : "Sign-in setup required"}</button><a className="button button-quiet" href={EXTERNAL_SITE} target="_blank" rel="noreferrer">Visit VOX site <ArrowUpRight size={15} /></a></div></div> : catalog ? <>
+      {tier === "premium" && !premium ? <div className="locked-panel catalog-locked"><div className="lock-art"><LockKeyhole size={24} /></div><div className="eyebrow">PREMIUM LIBRARY</div><h2>Premium access is tied to your account</h2><p>Premium access is managed on the VOX website and verified by the account service.</p><div className="locked-actions"><button className="button button-primary" onClick={onSignIn}><LockKeyhole size={15} /> Open account page</button><a className="button button-quiet" href={EXTERNAL_SITE} target="_blank" rel="noreferrer">Visit VOX site <ArrowUpRight size={15} /></a></div></div> : catalog ? <>
         <div className="catalog-meta"><span>{formatCount(catalog)} · {unsupportedCount} unsupported/unavailable on {runtime?.platform ?? "this platform"}</span><span className="verified-count"><BadgeCheck size={14} /> {readyCount} verified action{readyCount === 1 ? "" : "s"} ready</span></div>
         {lastRun && <div className={`batch-result ${lastRun.result.failure ? "batch-failure" : ""}`}><Check size={16} /><span><strong>{lastRun.singleItem ? "Tweak result" : "Apply All results"}</strong><small>{lastRun.result.items.filter((item) => item.status === "applied").length} applied · {lastRun.result.items.filter((item) => item.status === "unsupported" || item.status === "unavailable").length} skipped · {lastRun.result.items.filter((item) => item.status === "already-applied").length} already applied{lastRun.result.failure ? " · one action failed" : ""}</small></span><BadgeCheck size={16} /></div>}
         {filtered.length > 0 ? <div className="tweak-grid">{filtered.slice(0, 100).map((item) => {
@@ -820,8 +837,8 @@ function Faq() {
   return <><div className="page-title-row"><div><div className="eyebrow">THE DETAILS</div><h1>Frequently asked</h1><p>Clear answers about what VOX changes—and what it never will.</p></div><div className="faq-count"><CircleHelp size={17} /> {FAQ_ITEMS.length} answers</div></div><section className="faq-layout"><div className="faq-list">{FAQ_ITEMS.map((item, index) => <article className={`faq-item ${open === index ? "faq-open" : ""}`} key={item.question}><button className="faq-question" aria-expanded={open === index} onClick={() => setOpen(open === index ? null : index)}><span className="faq-number">{String(index + 1).padStart(2, "0")}</span><strong>{item.question}</strong><ChevronDown size={17} /></button>{open === index && <div className="faq-answer">{item.answer}</div>}</article>)}</div><aside className="faq-side"><div className="faq-side-icon"><Shield size={20} /></div><div className="eyebrow">OUR COMMITMENT</div><h3>Safe beats clever.</h3><p>Every system setting deserves a clear preview, a known rollback, and your explicit approval. If any of those are missing, VOX skips it.</p><a href={EXTERNAL_SITE} target="_blank" rel="noreferrer">More about VOX <ArrowUpRight size={14} /></a></aside></section></>;
 }
 
-function Settings({ session, premium, runtime, onSignIn, onSignOut }: { session: Session | null; premium: boolean; runtime: PlatformRuntime | null; onSignIn: () => void; onSignOut: () => void }) {
-  return <><div className="page-title-row"><div><div className="eyebrow">PREFERENCES</div><h1>Settings</h1><p>Your account, platform, and privacy controls.</p></div></div><section className="settings-card"><div className="settings-section-head"><div className="settings-icon"><Monitor size={17} /></div><div><strong>Device compatibility</strong><small>Native support is checked at runtime.</small></div></div><div className="settings-row"><span>Detected platform</span><strong>{runtime?.platform ?? "Checking..."}</strong></div><div className="settings-row"><span>Verified action status</span><strong className={runtime?.actionSupported ? "text-mint" : ""}>{runtime?.actionSupported ? "Available" : runtime?.actionUnavailableReason ?? "Checking..."}</strong></div></section><section className="settings-card"><div className="settings-section-head"><div className="settings-icon"><LockKeyhole size={17} /></div><div><strong>Account &amp; plan</strong><small>Email/password and Google sign-in use Supabase Auth.</small></div></div><div className="settings-row"><span>Account</span><strong>{session?.user.email ?? "Not signed in"}</strong></div><div className="settings-row"><span>Plan access</span><strong>{premium ? "Premium · verified" : "Free"}</strong></div><div className="settings-actions">{session ? <button className="button button-quiet button-small" onClick={onSignOut}><LogOut size={14} /> Sign out</button> : <button className="button button-primary button-small" onClick={onSignIn} disabled={!authConfigured}><LockKeyhole size={14} /> {authConfigured ? "Sign in with Google" : "Configure sign-in"}</button>}<a href={EXTERNAL_SITE} target="_blank" rel="noreferrer" className="settings-external">VOX website <ArrowUpRight size={14} /></a></div></section></>;
+function Settings({ session, premium, runtime, onSignIn, onSignOut }: { session: VoxSession | null; premium: boolean; runtime: PlatformRuntime | null; onSignIn: () => void; onSignOut: () => void }) {
+  return <><div className="page-title-row"><div><div className="eyebrow">PREFERENCES</div><h1>Settings</h1><p>Your account, platform, and privacy controls.</p></div></div><section className="settings-card"><div className="settings-section-head"><div className="settings-icon"><Monitor size={17} /></div><div><strong>Device compatibility</strong><small>Native support is checked at runtime.</small></div></div><div className="settings-row"><span>Detected platform</span><strong>{runtime?.platform ?? "Checking..."}</strong></div><div className="settings-row"><span>Verified action status</span><strong className={runtime?.actionSupported ? "text-mint" : ""}>{runtime?.actionSupported ? "Available" : runtime?.actionUnavailableReason ?? "Checking..."}</strong></div></section><section className="settings-card"><div className="settings-section-head"><div className="settings-icon"><LockKeyhole size={17} /></div><div><strong>Account &amp; plan</strong><small>Email/password sign-in uses VOX's Netlify Identity service.</small></div></div><div className="settings-row"><span>Account</span><strong>{session?.user.email ?? "Not signed in"}</strong></div><div className="settings-row"><span>Plan access</span><strong>{premium ? "Premium · verified" : "Free"}</strong></div><div className="settings-actions">{session ? <button className="button button-quiet button-small" onClick={onSignOut}><LogOut size={14} /> Sign out</button> : <button className="button button-primary button-small" onClick={onSignIn}><LockKeyhole size={14} /> Open account page</button>}<a href={EXTERNAL_SITE} target="_blank" rel="noreferrer" className="settings-external">VOX website <ArrowUpRight size={14} /></a></div></section></>;
 }
 
 function errorMessage(cause: unknown): string {

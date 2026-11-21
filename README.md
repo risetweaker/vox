@@ -10,7 +10,7 @@ VOX is a cross-platform desktop utility with a responsive companion web interfac
 - Eight exact Free/Premium catalog mappings on Windows: IDs 176, 177, 185, 201, 202, 204, 205, and 206. These are current-user visual and Explorer preferences with local rollback records; all other catalog rows remain unsupported.
 - One standalone, reviewed Reduce UI Motion action for Windows, macOS, and GNOME/Linux. It is separate from the catalog Apply All allowlist and backs up the previous setting before changing it.
 - Platform-specific Windows, macOS, and GNOME/Linux implementations under `src-tauri/src/platform/`.
-- Supabase Google OAuth entry point and server-controlled Premium access check.
+- Email/password sign-in through the existing VOX website's Netlify Identity service.
 - In-app FAQ and dark blue responsive interface.
 
 The supplied JSON files contain metadata rather than apply/undo recipes. Both are bundled in `public/catalogs/` and loaded automatically: Free has 274 entries and Premium has 842, despite the Premium file's `600` filename. The current catalog parser accepts the supplied `{ "app", "count", "tweaks": [...] }` shape and compares the declared count with actual records rather than trusting its filename. Users can still import an updated JSON file from the Optimize screen.
@@ -44,17 +44,11 @@ Catalog presence and an entry's low/medium/high risk label do not make a tweak s
 
 ## Authentication and Premium
 
-The app opens on a sign-in screen and requires an authenticated Supabase session to enter the workspace. Email/password sign-in and optional Google OAuth are available after configuration:
+The sign-in screen uses the existing site's Netlify Identity service at `https://vox-tweaking-utility.netlify.app/`. In the desktop app, a fixed native HTTP bridge makes HTTPS requests to that host; it accepts only the login, refresh, profile, and logout operations and never accepts arbitrary URLs. A browser build can sign in only when served from the same origin as the Identity service; other browser previews show an explanatory message instead of a broken form.
 
-1. Create a Supabase project and enable email/password (and Google OAuth if desired) in its Authentication provider settings.
-2. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in a local `.env` file (copy `.env.example`).
-3. Configure the OAuth redirect URL for every deployed origin, including `/auth/callback`.
-4. Assign `app_metadata.tier = "premium"` or include `"premium"` in `app_metadata.roles` from a trusted server/admin process. Never grant Premium from client-editable user metadata.
+**Create one** opens `https://vox-tweaking-utility.netlify.app/login`, where account registration is handled. The live Identity settings currently enable email/password sign-in and require email confirmation; sign in using the account email after confirming it. The site source and Netlify deployment are not part of this repository, and this project neither modifies nor deploys the site. No Supabase credentials, Google provider, or deployment secrets are required or included.
 
-The sign-in screen's **Create one** link opens the configured VOX website in a new tab; account registration remains on that site. This repository does not contain its source, so confirm that the website creates accounts in the same Supabase project before treating website registration and app sign-in as connected. Username-only sign-in is not implemented: Supabase email/password requires the account email unless the website provides a trusted username-to-account lookup API. Without the Supabase environment variables, the app stays on the sign-in screen and shows setup guidance.
-
-The public Supabase anon key is intended for client use; never put a service-role key or OAuth client secret in Vite environment variables. VOX does not include billing, account provisioning, or any secret credentials.
-The web OAuth callback route is included. For a production Tauri desktop release, configure and test a native deep-link callback and external-browser OAuth flow for each target OS; the starter does not ship a custom URL scheme or claim that desktop OAuth has been deployed.
+Premium access is displayed only when the Identity profile's server-managed `app_metadata` contains `tier: "premium"` or a `roles` entry of `"premium"`. Never grant Premium from client-editable metadata. VOX does not include billing or account provisioning.
 
 The existing URL https://vox-tweaking-utility.netlify.app/ is linked as the product site. Its source is not part of this repository, and this project neither modifies nor deploys it. Deploying the new web UI or configuring that Netlify site requires access to the relevant hosting project and its environment settings.
 

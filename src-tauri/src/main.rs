@@ -6,8 +6,10 @@ use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
 use std::sync::Mutex;
+use std::time::Duration;
 use tauri::Manager;
 
+const IDENTITY_API: &str = "https://vox-tweaking-utility.netlify.app/.netlify/identity";
 const ACTION_IDS: &[&str] = &[
     "reduce-ui-motion",
     "disable-transparency",
@@ -157,10 +159,94 @@ fn undo_action(
     })
 }
 
+#[tauri::command]
+async fn netlify_identity_request(
+    operation: String,
+    email: Option<String>,
+    password: Option<String>,
+    refresh_token: Option<String>,
+    access_token: Option<String>,
+) -> Result<String, String> {
+    let client = reqwest::Client::builder()
+        .timeout(Duration::from_secs(20))
+        .build()
+        .map_err(|error| format!("Could not initialize the VOX account connection: {error}"))?;
+    let request = match operation.as_str() {
+        "login" => {
+            let email = email.ok_or_else(|| "Enter your account email.".to_string())?;
+            let password = password.ok_or_else(|| "Enter your password.".to_string())?;
+            if email.trim().is_empty() || email.len() > 254 || password.is_empty() || password.len() > 256 {
+                return Err("The email or password is invalid.".to_string());
+            }
+            client
+                .post(format!("{IDENTITY_API}/token"))
+                .form(&[
+                    ("grant_type", "password"),
+                    ("username", email.trim()),
+                    ("password", password.as_str()),
+                ])
+        }
+        "refresh" => {
+            let refresh_token = refresh_token
+                .ok_or_else(|| "The saved sign-in session has expired.".to_string())?;
+            client
+                .post(format!("{IDENTITY_API}/token"))
+                .form(&[
+                    ("grant_type", "refresh_token"),
+                    ("refresh_token", refresh_token.as_str()),
+                ])
+        }
+        "user" => {
+            let access_token =
+                access_token.ok_or_else(|| "The saved sign-in session is incomplete.".to_string())?;
+            client
+                .get(format!("{IDENTITY_API}/user"))
+                .bearer_auth(access_token)
+        }
+        "logout" => {
+            let access_token =
+                access_token.ok_or_else(|| "The saved sign-in session is incomplete.".to_string())?;
+            client
+                .post(format!("{IDENTITY_API}/logout"))
+                .bearer_auth(access_token)
+        }
+        _ => return Err("This VOX account operation is not supported.".to_string()),
+    };
+
+    let response = request
+        .send()
+        .await
+        .map_err(|error| format!("Could not reach the VOX account service: {error}"))?;
+    let status = response.status();
+    let body = response
+        .text()
+        .await
+        .map_err(|error| format!("Could not read the VOX account response: {error}"))?;
+    if !status.is_success() {
+        let detail = serde_json::from_str::<serde_json::Value>(&body)
+            .ok()
+            .and_then(|value| {
+                ["msg", "error_description", "error"]
+                    .iter()
+                    .find_map(|key| value.get(key).and_then(serde_json::Value::as_str))
+                    .map(str::to_string)
+            })
+            .unwrap_or_else(|| "The VOX account service rejected the request.".to_string());
+        return Err(format!("NETLIFY_IDENTITY_HTTP_{}:{detail}", status.as_u16()));
+    }
+
+    Ok(body)
+}
+
 fn main() {
     tauri::Builder::default()
         .manage(ActionLock::default())
-        .invoke_handler(tauri::generate_handler![runtime_info, apply_action, undo_action])
+        .invoke_handler(tauri::generate_handler![
+            runtime_info,
+            apply_action,
+            undo_action,
+            netlify_identity_request
+        ])
         .run(tauri::generate_context!())
         .expect("error while running VOX");
 }
