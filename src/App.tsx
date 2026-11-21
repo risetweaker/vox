@@ -430,7 +430,6 @@ function Overview(props: {
   onImport: () => void;
   onApply: () => void;
   onUndo: () => void;
-  onUndoAction: (actionId: string) => void;
   busy: boolean;
 }) {
   const { runtime, catalogCount, premium, onNavigate, onImport, onApply, onUndo, busy } = props;
@@ -488,6 +487,7 @@ function Tweaks(props: {
   onImportPremium: () => void;
   onApply: () => void;
   onUndo: () => void;
+  onUndoAction: (actionId: string) => void;
   onSignIn: () => void;
   lastRun: ApplySummary | null;
   applyPlan: ApplyPlan;
