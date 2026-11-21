@@ -147,13 +147,15 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const activeSession = session;
-    if (!activeSession) return;
+    if (!session) return;
     let active = true;
     let timeout = 0;
-    async function refreshSession() {
+    const scheduleRefresh = (sessionToRefresh: VoxSession, delay: number) => {
+      timeout = window.setTimeout(() => void refreshSession(sessionToRefresh), delay);
+    };
+    async function refreshSession(sessionToRefresh: VoxSession) {
       try {
-        const nextSession = await refreshIdentitySession(activeSession);
+        const nextSession = await refreshIdentitySession(sessionToRefresh);
         if (active) setSession(nextSession);
       } catch (cause) {
         if (!active) return;
@@ -161,15 +163,12 @@ function App() {
           clearIdentitySession();
           setSession(null);
         } else {
-          timeout = window.setTimeout(() => void refreshSession(), 30_000);
+          scheduleRefresh(sessionToRefresh, 30_000);
         }
         setError(errorMessage(cause));
       }
     }
-    timeout = window.setTimeout(
-      () => void refreshSession(),
-      Math.max(1_000, activeSession.expiresAt - Date.now() - 60_000),
-    );
+    scheduleRefresh(session, Math.max(1_000, session.expiresAt - Date.now() - 60_000));
     return () => {
       active = false;
       window.clearTimeout(timeout);
