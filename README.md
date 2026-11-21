@@ -32,6 +32,10 @@ To run the desktop application, use `npm run tauri -- dev`. Build a desktop bund
 
 The web build is a preview and catalog browser. System settings can only be changed from the native desktop build.
 
+## Windows executable
+
+The **Build Windows executable** GitHub Actions workflow produces an x64 `vox.exe` artifact when manually run from the repository's Actions tab. Download the `vox-windows-exe` artifact and launch `vox.exe` on Windows. The executable is unsigned, so Windows may display a SmartScreen warning; no installer or code-signing certificate is currently provided.
+
 ## Catalog import
 
 Use the **Import Free JSON** or **Import Premium JSON** control and select the corresponding supplied file. Parsing is local to the browser. Files have a 2 MB limit, a 2,000-record limit, duplicate IDs and invalid metadata are rejected, and unknown fields are discarded. Catalog names, categories, and risks are displayed as text only.

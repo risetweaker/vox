@@ -16,6 +16,7 @@ jobs:
           node-version: 22
       - uses: dtolnay/rust-toolchain@stable
       - run: npm install
+      - run: npm run tauri -- icon src-tauri/icons/vox.svg --output src-tauri/icons
       - run: npm run tauri -- build --no-bundle
       - name: Verify executable
         shell: pwsh
