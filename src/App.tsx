@@ -147,12 +147,13 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!session) return;
+    const activeSession = session;
+    if (!activeSession) return;
     let active = true;
     let timeout = 0;
     async function refreshSession() {
       try {
-        const nextSession = await refreshIdentitySession(session);
+        const nextSession = await refreshIdentitySession(activeSession);
         if (active) setSession(nextSession);
       } catch (cause) {
         if (!active) return;
@@ -167,7 +168,7 @@ function App() {
     }
     timeout = window.setTimeout(
       () => void refreshSession(),
-      Math.max(1_000, session.expiresAt - Date.now() - 60_000),
+      Math.max(1_000, activeSession.expiresAt - Date.now() - 60_000),
     );
     return () => {
       active = false;

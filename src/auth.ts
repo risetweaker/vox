@@ -260,7 +260,11 @@ function readStoredTokens(): StoredTokens | null {
       typeof value.refreshToken === "string" &&
       typeof value.expiresAt === "number"
     ) {
-      return value as StoredTokens;
+      return {
+        accessToken: value.accessToken,
+        refreshToken: value.refreshToken,
+        expiresAt: value.expiresAt,
+      };
     }
   } catch {
     clearIdentitySession();
