@@ -8,6 +8,7 @@ import {
   ChevronDown,
   CircleHelp,
   CloudUpload,
+  Command,
   Eye,
   EyeOff,
   FileJson2,
