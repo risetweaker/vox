@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { invoke, isTauri } from "@tauri-apps/api/core";
 import {
   ArrowUpRight,
@@ -10,11 +10,13 @@ import {
   CloudUpload,
   Command,
   Eye,
+  EyeOff,
   FileJson2,
   Gauge,
   Gamepad2,
   LockKeyhole,
   LogOut,
+  Mail,
   Menu,
   Monitor,
   Moon,
@@ -28,7 +30,7 @@ import {
   X,
 } from "lucide-react";
 import type { Session } from "@supabase/supabase-js";
-import { authConfigured, signInWithGoogle, supabase } from "./auth";
+import { authConfigured, signInWithGoogle, signInWithPassword, supabase } from "./auth";
 import { buildApplyPlan, executeApplyPlan, type ApplyPlan, type BatchExecution, type BatchItemResult, type BatchItemStatus } from "./batch";
 import { formatCount, parseCatalog, type Catalog, type CatalogTier, type Tweak } from "./catalog";
 
@@ -72,6 +74,16 @@ const FAQ_ITEMS = [
       "The Premium catalog is shown only to an account whose Supabase app metadata is explicitly marked premium by your trusted backend. VOX does not include payment handling or let users grant themselves a Premium role.",
   },
   {
+    question: "How do I create a VOX account?",
+    answer:
+      "Choose Create one on the sign-in screen to open the VOX website. Account registration is handled there; this app does not invent or store a separate registration flow.",
+  },
+  {
+    question: "Can I sign in with a username?",
+    answer:
+      "This build supports Supabase email-and-password sign-in. Username-only sign-in needs a username lookup from the VOX website's authentication service, which is not available in this repository yet.",
+  },
+  {
     question: "Does VOX disable security features?",
     answer:
       "No. VOX will not disable antivirus, firewall, UAC, security updates, or other security protections. Those catalog rows remain unsupported.",
@@ -95,6 +107,7 @@ function App() {
   const [tier, setTier] = useState<CatalogTier>("free");
   const [catalogs, setCatalogs] = useState<Partial<Record<CatalogTier, Catalog>>>({});
   const [session, setSession] = useState<Session | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const [runtime, setRuntime] = useState<PlatformRuntime | null>(null);
   const [lastRun, setLastRun] = useState<ApplySummary | null>(null);
   const [pendingApply, setPendingApply] = useState<PendingApply | null>(null);
@@ -111,13 +124,30 @@ function App() {
   const searchInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (!supabase) return;
     let active = true;
-    void supabase.auth.getSession().then(({ data, error: authError }) => {
-      if (active && !authError) setSession(data.session);
-    });
+    if (!supabase) {
+      setAuthLoading(false);
+      return () => {
+        active = false;
+      };
+    }
     const { data } = supabase.auth.onAuthStateChange((_event, nextSession) => {
-      if (active) setSession(nextSession);
+      if (active) {
+        setSession(nextSession);
+        setAuthLoading(false);
+        if (nextSession) setError("");
+      }
+    });
+    void supabase.auth.getSession().then(({ data: sessionData, error: authError }) => {
+      if (!active) return;
+      if (authError) setError(authError.message);
+      else setSession(sessionData.session);
+      setAuthLoading(false);
+    }).catch((cause: unknown) => {
+      if (active) {
+        setError(errorMessage(cause));
+        setAuthLoading(false);
+      }
     });
     return () => {
       active = false;
@@ -238,6 +268,18 @@ function App() {
       await signInWithGoogle();
     } catch (cause) {
       setError(errorMessage(cause));
+    }
+  }
+
+  async function signInWithEmail(email: string, password: string) {
+    setError("");
+    setBusy(true);
+    try {
+      await signInWithPassword(email, password);
+    } catch (cause) {
+      setError(errorMessage(cause));
+    } finally {
+      setBusy(false);
     }
   }
 
@@ -367,6 +409,18 @@ function App() {
     setTier(nextTier);
     setCategory("All categories");
     setSearch("");
+  }
+
+  if (authLoading) return <AuthLoading />;
+  if (!session) {
+    return <LoginScreen
+      authConfigured={authConfigured}
+      busy={busy}
+      error={error}
+      onClearError={() => setError("")}
+      onSignIn={(email, password) => void signInWithEmail(email, password)}
+      onSignInGoogle={() => void signIn()}
+    />;
   }
 
   return (
@@ -500,6 +554,94 @@ function App() {
       </div>}
     </div>
   );
+}
+
+function AuthLoading() {
+  return <main className="auth-screen auth-loading">
+    <div className="auth-loading-card">
+      <div className="brand-mark"><span>V</span></div>
+      <span className="auth-loading-indicator" />
+      <strong>Checking your VOX account</strong>
+      <small>Securely restoring your sign-in session…</small>
+    </div>
+  </main>;
+}
+
+function LoginScreen({
+  authConfigured: configured,
+  busy: isBusy,
+  error: authError,
+  onClearError,
+  onSignIn,
+  onSignInGoogle,
+}: {
+  authConfigured: boolean;
+  busy: boolean;
+  error: string;
+  onClearError: () => void;
+  onSignIn: (email: string, password: string) => void;
+  onSignInGoogle: () => void;
+}) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    onClearError();
+    onSignIn(email.trim(), password);
+  }
+
+  return <main className="auth-screen">
+    <div className="auth-shell">
+      <section className="auth-showcase">
+        <div className="auth-brand"><div className="brand-mark"><span>V</span></div><div><strong>VOX</strong><small>OPTIMIZE</small></div></div>
+        <div className="auth-showcase-copy">
+          <div className="eyebrow"><span className="live-dot" /> SYSTEM CONTROL, MADE CLEAR</div>
+          <h1>Your system.<br /><span>Your settings.</span></h1>
+          <p>Sign in to continue to your VOX workspace, review your tweak catalogs, and apply only the changes you choose.</p>
+        </div>
+        <div className="auth-feature-card">
+          <div className="auth-feature-icon"><Shield size={18} /></div>
+          <div><strong>Built for control</strong><small>Reviewed actions, clear previews, and rollback where supported.</small></div>
+          <BadgeCheck size={17} />
+        </div>
+        <div className="auth-orbit" aria-hidden="true"><div className="auth-orbit-ring auth-orbit-ring-one" /><div className="auth-orbit-ring auth-orbit-ring-two" /><div className="auth-orbit-core"><Command size={30} /></div></div>
+        <div className="auth-showcase-footer"><span>FREE + PREMIUM CATALOGS</span><span className="auth-footer-line" /><span>WINDOWS · MACOS · LINUX</span></div>
+      </section>
+
+      <section className="auth-form-panel">
+        <div className="auth-form-heading">
+          <div className="auth-kicker">WELCOME BACK</div>
+          <h2>Sign in to VOX</h2>
+          <p>Use the email address and password linked to your account.</p>
+        </div>
+
+        {authError && <div className="auth-error" role="alert"><Shield size={16} /><span>{authError}</span><button type="button" aria-label="Dismiss error" onClick={onClearError}><X size={15} /></button></div>}
+
+        <form className="auth-form" onSubmit={submit}>
+          <label className="auth-field">
+            <span>Email address</span>
+            <span className="auth-input-wrap"><Mail size={16} /><input type="email" autoComplete="username" required maxLength={254} value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" /></span>
+          </label>
+          <label className="auth-field">
+            <span>Password</span>
+            <span className="auth-input-wrap"><LockKeyhole size={16} /><input type={showPassword ? "text" : "password"} autoComplete="current-password" required maxLength={256} value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Enter your password" /><button className="auth-password-toggle" type="button" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword((value) => !value)}>{showPassword ? <EyeOff size={16} /> : <Eye size={16} />}</button></span>
+          </label>
+          <button className="button button-primary auth-submit" type="submit" disabled={isBusy || !configured}><LockKeyhole size={16} /> {isBusy ? "Signing in…" : "Sign in"} <ArrowUpRight size={15} /></button>
+        </form>
+
+        {!configured && <div className="auth-setup-note" role="status"><strong>Sign-in setup required</strong><span>Add the Supabase URL and public anon key to this build before email/password sign-in can work.</span></div>}
+
+        <div className="auth-divider"><span /> <small>OR</small> <span /></div>
+        <button className="button button-quiet auth-google" type="button" disabled={isBusy || !configured} onClick={onSignInGoogle}><Sparkles size={16} /> Continue with Google</button>
+
+        <p className="auth-create">Don’t have an account? <a href={EXTERNAL_SITE} target="_blank" rel="noreferrer">Create one <ArrowUpRight size={13} /></a></p>
+        <p className="auth-account-note">Account creation is handled on the VOX website. Username-only sign-in needs a username lookup from its auth service; use your account email here.</p>
+      </section>
+    </div>
+    <div className="auth-site-link"><a href={EXTERNAL_SITE} target="_blank" rel="noreferrer">vox-tweaking-utility.netlify.app <ArrowUpRight size={13} /></a><span>Secure account sign-in by Supabase</span></div>
+  </main>;
 }
 
 function Overview(props: {
@@ -679,7 +821,7 @@ function Faq() {
 }
 
 function Settings({ session, premium, runtime, onSignIn, onSignOut }: { session: Session | null; premium: boolean; runtime: PlatformRuntime | null; onSignIn: () => void; onSignOut: () => void }) {
-  return <><div className="page-title-row"><div><div className="eyebrow">PREFERENCES</div><h1>Settings</h1><p>Your account, platform, and privacy controls.</p></div></div><section className="settings-card"><div className="settings-section-head"><div className="settings-icon"><Monitor size={17} /></div><div><strong>Device compatibility</strong><small>Native support is checked at runtime.</small></div></div><div className="settings-row"><span>Detected platform</span><strong>{runtime?.platform ?? "Checking..."}</strong></div><div className="settings-row"><span>Verified action status</span><strong className={runtime?.actionSupported ? "text-mint" : ""}>{runtime?.actionSupported ? "Available" : runtime?.actionUnavailableReason ?? "Checking..."}</strong></div></section><section className="settings-card"><div className="settings-section-head"><div className="settings-icon"><LockKeyhole size={17} /></div><div><strong>Account &amp; plan</strong><small>Authentication is provided by Supabase OAuth.</small></div></div><div className="settings-row"><span>Account</span><strong>{session?.user.email ?? "Not signed in"}</strong></div><div className="settings-row"><span>Plan access</span><strong>{premium ? "Premium · verified" : "Free"}</strong></div><div className="settings-actions">{session ? <button className="button button-quiet button-small" onClick={onSignOut}><LogOut size={14} /> Sign out</button> : <button className="button button-primary button-small" onClick={onSignIn} disabled={!authConfigured}><LockKeyhole size={14} /> {authConfigured ? "Sign in with Google" : "Configure sign-in"}</button>}<a href={EXTERNAL_SITE} target="_blank" rel="noreferrer" className="settings-external">VOX website <ArrowUpRight size={14} /></a></div></section></>;
+  return <><div className="page-title-row"><div><div className="eyebrow">PREFERENCES</div><h1>Settings</h1><p>Your account, platform, and privacy controls.</p></div></div><section className="settings-card"><div className="settings-section-head"><div className="settings-icon"><Monitor size={17} /></div><div><strong>Device compatibility</strong><small>Native support is checked at runtime.</small></div></div><div className="settings-row"><span>Detected platform</span><strong>{runtime?.platform ?? "Checking..."}</strong></div><div className="settings-row"><span>Verified action status</span><strong className={runtime?.actionSupported ? "text-mint" : ""}>{runtime?.actionSupported ? "Available" : runtime?.actionUnavailableReason ?? "Checking..."}</strong></div></section><section className="settings-card"><div className="settings-section-head"><div className="settings-icon"><LockKeyhole size={17} /></div><div><strong>Account &amp; plan</strong><small>Email/password and Google sign-in use Supabase Auth.</small></div></div><div className="settings-row"><span>Account</span><strong>{session?.user.email ?? "Not signed in"}</strong></div><div className="settings-row"><span>Plan access</span><strong>{premium ? "Premium · verified" : "Free"}</strong></div><div className="settings-actions">{session ? <button className="button button-quiet button-small" onClick={onSignOut}><LogOut size={14} /> Sign out</button> : <button className="button button-primary button-small" onClick={onSignIn} disabled={!authConfigured}><LockKeyhole size={14} /> {authConfigured ? "Sign in with Google" : "Configure sign-in"}</button>}<a href={EXTERNAL_SITE} target="_blank" rel="noreferrer" className="settings-external">VOX website <ArrowUpRight size={14} /></a></div></section></>;
 }
 
 function errorMessage(cause: unknown): string {

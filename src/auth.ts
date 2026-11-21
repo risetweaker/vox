@@ -16,6 +16,14 @@ if (supabaseUrl && supabaseAnonKey) {
 export const supabase = client;
 export const authConfigured = Boolean(supabase);
 
+export async function signInWithPassword(email: string, password: string): Promise<void> {
+  if (!supabase) {
+    throw new Error(configurationError ?? "Sign-in is not configured. See the setup guide.");
+  }
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) throw error;
+}
+
 export async function signInWithGoogle(): Promise<void> {
   if (!supabase) {
     throw new Error(configurationError ?? "Sign-in is not configured. See the setup guide.");

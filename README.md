@@ -44,12 +44,14 @@ Catalog presence and an entry's low/medium/high risk label do not make a tweak s
 
 ## Authentication and Premium
 
-Real sign-in is optional and disabled until configured:
+The app opens on a sign-in screen and requires an authenticated Supabase session to enter the workspace. Email/password sign-in and optional Google OAuth are available after configuration:
 
-1. Create a Supabase project and enable Google OAuth in its Authentication provider settings.
+1. Create a Supabase project and enable email/password (and Google OAuth if desired) in its Authentication provider settings.
 2. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in a local `.env` file (copy `.env.example`).
 3. Configure the OAuth redirect URL for every deployed origin, including `/auth/callback`.
 4. Assign `app_metadata.tier = "premium"` or include `"premium"` in `app_metadata.roles` from a trusted server/admin process. Never grant Premium from client-editable user metadata.
+
+The sign-in screen's **Create one** link opens the configured VOX website in a new tab; account registration remains on that site. This repository does not contain its source, so confirm that the website creates accounts in the same Supabase project before treating website registration and app sign-in as connected. Username-only sign-in is not implemented: Supabase email/password requires the account email unless the website provides a trusted username-to-account lookup API. Without the Supabase environment variables, the app stays on the sign-in screen and shows setup guidance.
 
 The public Supabase anon key is intended for client use; never put a service-role key or OAuth client secret in Vite environment variables. VOX does not include billing, account provisioning, or any secret credentials.
 The web OAuth callback route is included. For a production Tauri desktop release, configure and test a native deep-link callback and external-browser OAuth flow for each target OS; the starter does not ship a custom URL scheme or claim that desktop OAuth has been deployed.
