@@ -1,0 +1,32 @@
+name: Build Windows executable
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: dtolnay/rust-toolchain@stable
+      - run: npm install
+      - run: npm run tauri -- build --no-bundle
+      - name: Verify executable
+        shell: pwsh
+        run: |
+          $exe = "src-tauri/target/release/vox.exe"
+          if (-not (Test-Path $exe)) {
+            throw "VOX executable was not produced at $exe"
+          }
+          Get-Item $exe | Select-Object FullName, Length
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vox-windows-exe
+          path: src-tauri/target/release/vox.exe
+          if-no-files-found: error
