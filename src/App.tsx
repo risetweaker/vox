@@ -8,7 +8,6 @@ import {
   ChevronDown,
   CircleHelp,
   CloudUpload,
-  Command,
   Eye,
   EyeOff,
   FileJson2,
@@ -42,7 +41,7 @@ import {
 import { buildApplyPlan, executeApplyPlan, type ApplyPlan, type BatchExecution, type BatchItemResult, type BatchItemStatus } from "./batch";
 import { formatCount, parseCatalog, type Catalog, type CatalogTier, type Tweak } from "./catalog";
 
-type Page = "overview" | "tweaks" | "faq" | "settings";
+type Page = "home" | "overview" | "tweaks" | "premium" | "faq" | "settings" | "account";
 type PlatformRuntime = {
   platform: string;
   actionSupported: boolean;
@@ -56,6 +55,7 @@ type PendingApply = { tier: CatalogTier; plan: ApplyPlan; singleItem?: string };
 const ACTION_ID = "reduce-ui-motion";
 const EXTERNAL_SITE = "https://vox-tweaking-utility.netlify.app/";
 const ACCOUNT_SITE = `${EXTERNAL_SITE}login`;
+const APP_EDITION: CatalogTier = import.meta.env.VITE_VOX_EDITION === "premium" ? "premium" : "free";
 const FAQ_ITEMS = [
   {
     question: "What does VOX actually change?",
@@ -85,7 +85,7 @@ const FAQ_ITEMS = [
   {
     question: "How do I create a VOX account?",
     answer:
-      "Choose Create one on the sign-in screen to open the VOX website's account page. Registration and email confirmation are handled there.",
+      "Open Account in the sidebar and choose Create one. Registration and email confirmation are handled on the VOX website.",
   },
   {
     question: "Can I sign in with a username?",
@@ -100,10 +100,13 @@ const FAQ_ITEMS = [
 ];
 
 const NAV_ITEMS: { id: Page; label: string; icon: typeof Gauge }[] = [
-  { id: "overview", label: "General", icon: Gauge },
-  { id: "tweaks", label: "Optimize", icon: SlidersHorizontal },
-  { id: "faq", label: "Support", icon: CircleHelp },
+  { id: "home", label: "Home", icon: Gauge },
+  { id: "overview", label: "Optimisation", icon: SlidersHorizontal },
+  { id: "tweaks", label: "Tweaks", icon: Sun },
+  { id: "premium", label: "Premium", icon: Sparkles },
+  { id: "faq", label: "FAQ", icon: CircleHelp },
   { id: "settings", label: "Settings", icon: Settings2 },
+  { id: "account", label: "Account", icon: LockKeyhole },
 ];
 
 function isPremiumSession(session: VoxSession | null): boolean {
@@ -112,11 +115,10 @@ function isPremiumSession(session: VoxSession | null): boolean {
 }
 
 function App() {
-  const [page, setPage] = useState<Page>("tweaks");
-  const [tier, setTier] = useState<CatalogTier>("free");
+  const [page, setPage] = useState<Page>(APP_EDITION === "premium" ? "premium" : "home");
+  const [tier, setTier] = useState<CatalogTier>(APP_EDITION);
   const [catalogs, setCatalogs] = useState<Partial<Record<CatalogTier, Catalog>>>({});
   const [session, setSession] = useState<VoxSession | null>(null);
-  const [authLoading, setAuthLoading] = useState(true);
   const [runtime, setRuntime] = useState<PlatformRuntime | null>(null);
   const [lastRun, setLastRun] = useState<ApplySummary | null>(null);
   const [pendingApply, setPendingApply] = useState<PendingApply | null>(null);
@@ -138,8 +140,6 @@ function App() {
       if (active) setSession(nextSession);
     }).catch((cause: unknown) => {
       if (active) setError(errorMessage(cause));
-    }).finally(() => {
-      if (active) setAuthLoading(false);
     });
     return () => {
       active = false;
@@ -207,7 +207,7 @@ function App() {
     function handleSearchShortcut(event: KeyboardEvent) {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
-        setPage("tweaks");
+        navigate("tweaks");
         window.setTimeout(() => searchInput.current?.focus(), 0);
       }
     }
@@ -282,15 +282,13 @@ function App() {
     }
   }
 
-  function openAccountSite() {
-    window.open(ACCOUNT_SITE, "_blank", "noopener,noreferrer");
-  }
-
   async function signInWithEmail(email: string, password: string) {
     setError("");
     setBusy(true);
     try {
       setSession(await signInWithPassword(email, password));
+      setNotice("Signed in to VOX.");
+      navigate("home");
     } catch (cause) {
       setError(errorMessage(cause));
     } finally {
@@ -423,6 +421,11 @@ function App() {
   }
 
   function navigate(nextPage: Page) {
+    if (nextPage === "premium" || nextPage === "tweaks") {
+      setTier(nextPage === "premium" ? "premium" : "free");
+      setCategory("All categories");
+      setSearch("");
+    }
     setPage(nextPage);
     setMenuOpen(false);
     setError("");
@@ -430,19 +433,9 @@ function App() {
 
   function selectTier(nextTier: CatalogTier) {
     setTier(nextTier);
+    setPage(nextTier === "premium" ? "premium" : "tweaks");
     setCategory("All categories");
     setSearch("");
-  }
-
-  if (authLoading) return <AuthLoading />;
-  if (!session) {
-    return <LoginScreen
-      loginAvailable={canSignInFromCurrentContext()}
-      busy={busy}
-      error={error}
-      onClearError={() => setError("")}
-      onSignIn={(email, password) => void signInWithEmail(email, password)}
-    />;
   }
 
   return (
@@ -450,24 +443,24 @@ function App() {
       <aside className={`sidebar ${menuOpen ? "sidebar-open" : ""}`}>
         <div className="brand">
           <div className="brand-mark"><span>V</span></div>
-          <div><strong>VOX</strong><small>OPTIMIZE</small></div>
+          <div><strong>VOX</strong><small>{APP_EDITION === "premium" ? "PREMIUM EDITION" : "OPTIMIZE"}</small></div>
           <button className="icon-button mobile-close" aria-label="Close menu" onClick={() => setMenuOpen(false)}><X size={18} /></button>
         </div>
-        <button className="account-card" onClick={() => session ? void signOut() : openAccountSite()} title={session ? "Sign out" : "Open account page"}>
+        <button className="account-card" onClick={() => session ? void signOut() : navigate("account")} title={session ? "Sign out" : "Open account page"}>
           <span className="avatar">{session?.user.email?.slice(0, 1).toUpperCase() ?? "V"}</span>
-          <span className="account-copy"><strong>{session?.user.email ?? "Guest"}</strong><small>{premium ? "VOX Premium" : "VOX Free"}</small></span>
+          <span className="account-copy"><strong>{session?.user.email ?? "Guest"}</strong><small>{session ? (premium ? "VOX Premium" : "VOX Free") : "Sign in or create account"}</small></span>
           <ChevronDown size={16} />
         </button>
-        <div className="nav-caption">MENU</div>
+        <div className="nav-caption">WORKSPACE</div>
         <nav className="nav-list" aria-label="Main navigation">
           {NAV_ITEMS.map(({ id, label, icon: Icon }) => (
             <button key={id} className={`nav-item ${page === id ? "active" : ""}`} onClick={() => navigate(id)}>
               <Icon size={18} strokeWidth={1.8} /><span>{label}</span>
-              {id === "tweaks" && <span className="nav-pulse" />}
+              {(id === "tweaks" || id === "premium") && <span className="nav-pulse" />}
             </button>
           ))}
         </nav>
-        {page === "tweaks" && categories.length > 1 && <div className="sidebar-categories">
+        {(page === "tweaks" || page === "premium") && categories.length > 1 && <div className="sidebar-categories">
           <div className="nav-caption">CATEGORIES</div>
           {categories.slice(1).map((item) => <button key={item} className={`nav-subitem ${category === item ? "active" : ""}`} onClick={() => setCategory(item)}><span className="category-mini-icon"><SlidersHorizontal size={14} /></span><span>{item}</span></button>)}
         </div>}
@@ -475,11 +468,11 @@ function App() {
           <div className="upgrade-card-art"><Sparkles size={26} /></div>
           <strong>Upgrade to Premium</strong>
           <small>{catalogs.premium?.tweaks.length ?? "Premium"} tweaks require verified access.</small>
-          <button className="button button-primary button-small" onClick={() => { selectTier("premium"); navigate("tweaks"); }}><Sparkles size={14} /> View Premium</button>
+          <button className="button button-primary button-small" onClick={() => navigate("premium")}><Sparkles size={14} /> View Premium</button>
         </section>}
         <div className="sidebar-bottom">
           <div className="sidebar-status"><span className={`status-dot ${runtime?.actionSupported ? "online" : ""}`} /><span>{runtime?.platform ?? "Detecting system"}</span><span className="status-label">{runtime?.actionSupported ? "READY" : "PREVIEW"}</span></div>
-          <a className="external-link" href={EXTERNAL_SITE} target="_blank" rel="noreferrer">vox-tweaking-utility.netlify.app <ArrowUpRight size={14} /></a>
+          <a className="external-link" href={ACCOUNT_SITE} target="_blank" rel="noreferrer">Create account / VOX website <ArrowUpRight size={14} /></a>
         </div>
       </aside>
 
@@ -497,16 +490,22 @@ function App() {
                 <LogOut size={14} className="logout-icon" />
               </button>
             ) : (
-              <button className="button button-quiet button-small" onClick={openAccountSite} title="Open the VOX account page">
-                <LockKeyhole size={14} /> Account
+              <button className="button button-quiet button-small" onClick={() => navigate("account")} title="Open your VOX account">
+                <LockKeyhole size={14} /> Sign in
               </button>
             )}
           </div>
         </header>
 
         <div className="page-wrap">
-          {error && <div className="message message-error" role="alert"><Shield size={17} /><span>{error}</span><button aria-label="Dismiss error" onClick={() => setError("")}><X size={15} /></button></div>}
+          {error && page !== "account" && <div className="message message-error" role="alert"><Shield size={17} /><span>{error}</span><button aria-label="Dismiss error" onClick={() => setError("")}><X size={15} /></button></div>}
           {notice && <div className="message message-success" role="status"><Check size={17} /><span>{notice}</span><button aria-label="Dismiss message" onClick={() => setNotice("")}><X size={15} /></button></div>}
+          {page === "home" && <Home
+            catalogCount={(catalogs.free?.tweaks.length ?? 0) + (catalogs.premium?.tweaks.length ?? 0)}
+            premium={premium}
+            runtime={runtime}
+            onNavigate={navigate}
+          />}
           {page === "overview" && <Overview
             runtime={runtime}
             catalogCount={(catalogs.free?.tweaks.length ?? 0) + (premium ? catalogs.premium?.tweaks.length ?? 0 : 0)}
@@ -517,7 +516,7 @@ function App() {
             onUndo={() => void undoAction(ACTION_ID)}
             busy={busy}
           />}
-          {page === "tweaks" && <Tweaks
+          {(page === "tweaks" || page === "premium") && <Tweaks
             tier={tier}
             setTier={selectTier}
             premium={premium}
@@ -533,18 +532,25 @@ function App() {
             onApplyOne={requestApplyOne}
             onUndo={() => void undoAction(ACTION_ID)}
             onUndoAction={(actionId) => void undoAction(actionId)}
-            onSignIn={openAccountSite}
+            onSignIn={() => navigate("account")}
             lastRun={lastRun?.tier === tier ? lastRun : null}
             applyPlan={applyPlan}
             runtime={runtime}
             busy={busy}
           />}
           {page === "faq" && <Faq />}
+          {page === "account" && <LoginScreen
+            loginAvailable={canSignInFromCurrentContext()}
+            busy={busy}
+            error={error}
+            onClearError={() => setError("")}
+            onSignIn={(email, password) => void signInWithEmail(email, password)}
+          />}
           {page === "settings" && <Settings
             session={session}
             premium={premium}
             runtime={runtime}
-            onSignIn={openAccountSite}
+            onSignIn={() => navigate("account")}
             onSignOut={() => void signOut()}
           />}
         </div>
@@ -578,17 +584,6 @@ function App() {
   );
 }
 
-function AuthLoading() {
-  return <main className="auth-screen auth-loading">
-    <div className="auth-loading-card">
-      <div className="brand-mark"><span>V</span></div>
-      <span className="auth-loading-indicator" />
-      <strong>Checking your VOX account</strong>
-      <small>Securely restoring your sign-in session…</small>
-    </div>
-  </main>;
-}
-
 function LoginScreen({
   loginAvailable,
   busy: isBusy,
@@ -612,29 +607,16 @@ function LoginScreen({
     onSignIn(email.trim(), password);
   }
 
-  return <main className="auth-screen">
-    <div className="auth-shell">
-      <section className="auth-showcase">
-        <div className="auth-brand"><div className="brand-mark"><span>V</span></div><div><strong>VOX</strong><small>OPTIMIZE</small></div></div>
-        <div className="auth-showcase-copy">
-          <div className="eyebrow"><span className="live-dot" /> SYSTEM CONTROL, MADE CLEAR</div>
-          <h1>Your system.<br /><span>Your settings.</span></h1>
-          <p>Sign in to continue to your VOX workspace, review your tweak catalogs, and apply only the changes you choose.</p>
-        </div>
-        <div className="auth-feature-card">
-          <div className="auth-feature-icon"><Shield size={18} /></div>
-          <div><strong>Built for control</strong><small>Reviewed actions, clear previews, and rollback where supported.</small></div>
-          <BadgeCheck size={17} />
-        </div>
-        <div className="auth-orbit" aria-hidden="true"><div className="auth-orbit-ring auth-orbit-ring-one" /><div className="auth-orbit-ring auth-orbit-ring-two" /><div className="auth-orbit-core"><Command size={30} /></div></div>
-        <div className="auth-showcase-footer"><span>FREE + PREMIUM CATALOGS</span><span className="auth-footer-line" /><span>WINDOWS · MACOS · LINUX</span></div>
-      </section>
-
-      <section className="auth-form-panel">
+  return <>
+    <div className="page-title-row">
+      <div><div className="eyebrow">YOUR VOX ACCOUNT</div><h1>Account</h1><p>Sign in is optional. Your account manages Premium access.</p></div>
+    </div>
+    <div className="account-layout">
+      <section className="settings-card account-signin-card">
         <div className="auth-form-heading">
           <div className="auth-kicker">WELCOME BACK</div>
           <h2>Sign in to VOX</h2>
-          <p>Use the email address and password linked to your account.</p>
+          <p>Use the email address and password linked to your VOX account.</p>
         </div>
 
         {authError && <div className="auth-error" role="alert"><Shield size={16} /><span>{authError}</span><button type="button" aria-label="Dismiss error" onClick={onClearError}><X size={15} /></button></div>}
@@ -656,9 +638,36 @@ function LoginScreen({
         <p className="auth-create">Don’t have an account? <a href={ACCOUNT_SITE} target="_blank" rel="noreferrer">Create one <ArrowUpRight size={13} /></a></p>
         <p className="auth-account-note">Account registration and email confirmation are handled on the VOX website.</p>
       </section>
+      <aside className="settings-card account-site-card">
+        <div className="settings-section-head"><div className="settings-icon"><ArrowUpRight size={17} /></div><div><strong>New to VOX?</strong><small>Create your account on the VOX website.</small></div></div>
+        <p>Account registration and email confirmation are handled securely by Netlify Identity.</p>
+        <a className="button button-primary" href={ACCOUNT_SITE} target="_blank" rel="noreferrer">Create account <ArrowUpRight size={15} /></a>
+        <a className="settings-external" href={EXTERNAL_SITE} target="_blank" rel="noreferrer">Visit VOX website <ArrowUpRight size={14} /></a>
+      </aside>
     </div>
-    <div className="auth-site-link"><a href={EXTERNAL_SITE} target="_blank" rel="noreferrer">vox-tweaking-utility.netlify.app <ArrowUpRight size={13} /></a><span>Secure account sign-in by Netlify Identity</span></div>
-  </main>;
+  </>;
+}
+
+function Home({ catalogCount, premium, runtime, onNavigate }: { catalogCount: number; premium: boolean; runtime: PlatformRuntime | null; onNavigate: (page: Page) => void }) {
+  return <>
+    <div className="page-title-row"><div><div className="eyebrow">VOX {APP_EDITION === "premium" ? "PREMIUM EDITION" : "SYSTEM UTILITY"}</div><h1>Welcome to VOX</h1><p>Explore your system settings, tweak catalogs, and help without signing in.</p></div></div>
+    <section className="home-welcome">
+      <div className="eyebrow"><span className="live-dot" /> YOUR SYSTEM, YOUR CHOICE</div>
+      <h2>Clear controls.<br /><span>Changes you can undo.</span></h2>
+      <p>Browse Free and Premium catalogs, review exactly which settings are supported on this device, and choose what to apply.</p>
+      <div className="home-actions">
+        <button className="button button-primary" onClick={() => onNavigate("overview")}><Gauge size={16} /> Open optimisation</button>
+        <button className="button button-quiet" onClick={() => onNavigate("tweaks")}><SlidersHorizontal size={16} /> Browse tweaks</button>
+        <a className="button button-quiet" href={ACCOUNT_SITE} target="_blank" rel="noreferrer">Create account <ArrowUpRight size={15} /></a>
+      </div>
+    </section>
+    <div className="home-card-grid">
+      <button className="home-route-card" onClick={() => onNavigate("tweaks")}><span className="home-route-icon"><SlidersHorizontal size={18} /></span><strong>Browse tweaks</strong><small>{catalogCount ? `${catalogCount.toLocaleString()} catalog entries` : "Loading bundled catalogs"}</small><ArrowUpRight size={15} /></button>
+      <button className="home-route-card" onClick={() => onNavigate("premium")}><span className="home-route-icon premium-route-icon"><Sparkles size={18} /></span><strong>Premium catalog</strong><small>{premium ? "Premium access verified" : "Requires a Premium account"}</small><ArrowUpRight size={15} /></button>
+      <button className="home-route-card" onClick={() => onNavigate("faq")}><span className="home-route-icon"><CircleHelp size={18} /></span><strong>FAQ &amp; support</strong><small>How VOX works and what it changes</small><ArrowUpRight size={15} /></button>
+      <div className="home-route-card home-platform-card"><span className="home-route-icon"><Monitor size={18} /></span><strong>{runtime?.platform ?? "Detecting platform"}</strong><small>{runtime?.actionSupported ? "Verified system actions available" : runtime?.actionUnavailableReason ?? "Checking this device"}</small></div>
+    </div>
+  </>;
 }
 
 function Overview(props: {
@@ -784,7 +793,7 @@ function Tweaks(props: {
         </div>
       </div>
 
-      {tier === "premium" && !premium ? <div className="locked-panel catalog-locked"><div className="lock-art"><LockKeyhole size={24} /></div><div className="eyebrow">PREMIUM LIBRARY</div><h2>Premium access is tied to your account</h2><p>Premium access is managed on the VOX website and verified by the account service.</p><div className="locked-actions"><button className="button button-primary" onClick={onSignIn}><LockKeyhole size={15} /> Open account page</button><a className="button button-quiet" href={EXTERNAL_SITE} target="_blank" rel="noreferrer">Visit VOX site <ArrowUpRight size={15} /></a></div></div> : catalog ? <>
+      {tier === "premium" && !premium ? <div className="locked-panel catalog-locked"><div className="lock-art"><LockKeyhole size={24} /></div><div className="eyebrow">PREMIUM LIBRARY</div><h2>Premium access is tied to your account</h2><p>Premium access is managed on the VOX website and verified by the account service.</p><div className="locked-actions"><button className="button button-primary" onClick={onSignIn}><LockKeyhole size={15} /> Sign in to your account</button><a className="button button-quiet" href={ACCOUNT_SITE} target="_blank" rel="noreferrer">Create account <ArrowUpRight size={15} /></a></div></div> : catalog ? <>
         <div className="catalog-meta"><span>{formatCount(catalog)} · {unsupportedCount} unsupported/unavailable on {runtime?.platform ?? "this platform"}</span><span className="verified-count"><BadgeCheck size={14} /> {readyCount} verified action{readyCount === 1 ? "" : "s"} ready</span></div>
         {lastRun && <div className={`batch-result ${lastRun.result.failure ? "batch-failure" : ""}`}><Check size={16} /><span><strong>{lastRun.singleItem ? "Tweak result" : "Apply All results"}</strong><small>{lastRun.result.items.filter((item) => item.status === "applied").length} applied · {lastRun.result.items.filter((item) => item.status === "unsupported" || item.status === "unavailable").length} skipped · {lastRun.result.items.filter((item) => item.status === "already-applied").length} already applied{lastRun.result.failure ? " · one action failed" : ""}</small></span><BadgeCheck size={16} /></div>}
         {filtered.length > 0 ? <div className="tweak-grid">{filtered.slice(0, 100).map((item) => {

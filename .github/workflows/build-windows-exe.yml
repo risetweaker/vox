@@ -17,17 +17,38 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - run: npm install
       - run: npm run tauri -- icon src-tauri/icons/vox.svg --output src-tauri/icons
-      - run: npm run tauri -- build --no-bundle
-      - name: Verify executable
+      - name: Build Free edition
+        run: npm run tauri -- build --no-bundle
+        env:
+          VITE_VOX_EDITION: free
+      - name: Preserve Free executable for the final artifact
+        shell: pwsh
+        run: Copy-Item "src-tauri\target\release\vox.exe" "src-tauri\target\release\vox-free-staging.exe" -Force
+      - name: Build Premium edition
+        run: npm run tauri -- build --no-bundle
+        env:
+          VITE_VOX_EDITION: premium
+      - name: Prepare and verify both editions
         shell: pwsh
         run: |
-          $exe = "src-tauri/target/release/vox.exe"
-          if (-not (Test-Path $exe)) {
-            throw "VOX executable was not produced at $exe"
+          $release = "src-tauri\target\release"
+          Copy-Item "$release\vox.exe" "$release\vox-premium.exe" -Force
+          Copy-Item "$release\vox-free-staging.exe" "$release\vox.exe" -Force
+          Remove-Item "$release\vox-free-staging.exe"
+          foreach ($exe in @("$release\vox.exe", "$release\vox-premium.exe")) {
+            if (-not (Test-Path $exe)) {
+              throw "VOX executable was not produced at $exe"
+            }
+            $bytes = [System.IO.File]::ReadAllBytes($exe)
+            if ($bytes.Length -lt 2 -or $bytes[0] -ne 0x4D -or $bytes[1] -ne 0x5A) {
+              throw "File is not a Windows executable: $exe"
+            }
           }
-          Get-Item $exe | Select-Object FullName, Length
+          Get-Item "$release\vox.exe", "$release\vox-premium.exe" | Select-Object FullName, Length
       - uses: actions/upload-artifact@v4
         with:
           name: vox-windows-exe
-          path: src-tauri/target/release/vox.exe
+          path: |
+            src-tauri/target/release/vox.exe
+            src-tauri/target/release/vox-premium.exe
           if-no-files-found: error
