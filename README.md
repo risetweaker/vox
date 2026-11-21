@@ -13,7 +13,7 @@ VOX is a cross-platform desktop utility with a responsive companion web interfac
 - Supabase Google OAuth entry point and server-controlled Premium access check.
 - In-app FAQ and dark blue responsive interface.
 
-The supplied JSON files contain metadata rather than apply/undo recipes. They are intentionally imported by the user instead of being presented as an embedded, executable catalog. The current catalog parser accepts the supplied `{ "app", "count", "tweaks": [...] }` shape. The supplied Free file has 274 entries; the file named `vox_tweaks_600.json` has 842. The interface compares the declared count with actual records rather than trusting its filename.
+The supplied JSON files contain metadata rather than apply/undo recipes. Both are bundled in `public/catalogs/` and loaded automatically: Free has 274 entries and Premium has 842, despite the Premium file's `600` filename. The current catalog parser accepts the supplied `{ "app", "count", "tweaks": [...] }` shape and compares the declared count with actual records rather than trusting its filename. Users can still import an updated JSON file from the Optimize screen.
 
 ## Requirements and development
 
@@ -38,7 +38,7 @@ The **Build Windows executable** GitHub Actions workflow produces an x64 `vox.ex
 
 ## Catalog import
 
-Use the **Import Free JSON** or **Import Premium JSON** control and select the corresponding supplied file. Parsing is local to the browser. Files have a 2 MB limit, a 2,000-record limit, duplicate IDs and invalid metadata are rejected, and unknown fields are discarded. Catalog names, categories, and risks are displayed as text only.
+The bundled Free and Premium catalogs appear automatically in the Optimize screen. Use **Import Free JSON** or **Import Premium JSON** to replace a bundled catalog with an updated file. Parsing is local to the app. Files have a 2 MB limit, a 2,000-record limit, duplicate IDs and invalid metadata are rejected, and unknown fields are discarded. Catalog names, categories, and risks are displayed as text only.
 
 Catalog presence and an entry's low/medium/high risk label do not make a tweak safe. The exact ID/name/category/risk tuples for IDs 176, 177, 185, 201, 202, 204, 205, and 206 are the only imported mappings; they are available on Windows only. Each action uses fixed registry paths and value names, validates prior values, and stores its rollback data locally. Showing hidden files does not change Windows' separate protected-operating-system-files setting. The standalone Reduce UI Motion control remains separate; on Windows it uses the reversible `MinAnimate` preference, which is also the mechanism used by catalog ID 177. Other catalog records remain unsupported. VOX does not disable antivirus, firewall, UAC, security updates, or other security protections.
 

@@ -40,8 +40,8 @@ type PlatformRuntime = {
   actionApplied: boolean;
   appliedActions?: string[];
 };
-type ApplySummary = { tier: CatalogTier; result: BatchExecution };
-type PendingApply = { tier: CatalogTier; plan: ApplyPlan };
+type ApplySummary = { tier: CatalogTier; result: BatchExecution; singleItem?: string };
+type PendingApply = { tier: CatalogTier; plan: ApplyPlan; singleItem?: string };
 
 const ACTION_ID = "reduce-ui-motion";
 const EXTERNAL_SITE = "https://vox-tweaking-utility.netlify.app/";
@@ -79,9 +79,9 @@ const FAQ_ITEMS = [
 ];
 
 const NAV_ITEMS: { id: Page; label: string; icon: typeof Gauge }[] = [
-  { id: "overview", label: "Overview", icon: Gauge },
-  { id: "tweaks", label: "Tweaks", icon: SlidersHorizontal },
-  { id: "faq", label: "FAQ", icon: CircleHelp },
+  { id: "overview", label: "General", icon: Gauge },
+  { id: "tweaks", label: "Optimize", icon: SlidersHorizontal },
+  { id: "faq", label: "Support", icon: CircleHelp },
   { id: "settings", label: "Settings", icon: Settings2 },
 ];
 
@@ -91,7 +91,7 @@ function isPremiumSession(session: Session | null): boolean {
 }
 
 function App() {
-  const [page, setPage] = useState<Page>("overview");
+  const [page, setPage] = useState<Page>("tweaks");
   const [tier, setTier] = useState<CatalogTier>("free");
   const [catalogs, setCatalogs] = useState<Partial<Record<CatalogTier, Catalog>>>({});
   const [session, setSession] = useState<Session | null>(null);
@@ -108,6 +108,7 @@ function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const freeFile = useRef<HTMLInputElement>(null);
   const premiumFile = useRef<HTMLInputElement>(null);
+  const searchInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!supabase) return;
@@ -122,6 +123,46 @@ function App() {
       active = false;
       data.subscription.unsubscribe();
     };
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    async function loadBuiltInCatalogs() {
+      const [freeResponse, premiumResponse] = await Promise.all([
+        fetch(`${import.meta.env.BASE_URL}catalogs/free.json`),
+        fetch(`${import.meta.env.BASE_URL}catalogs/premium.json`),
+      ]);
+      if (!freeResponse.ok || !premiumResponse.ok) {
+        throw new Error("The built-in Free or Premium catalog could not be loaded.");
+      }
+      const [freeText, premiumText] = await Promise.all([freeResponse.text(), premiumResponse.text()]);
+      const freeCatalog = parseCatalog(freeText, "free");
+      const premiumCatalog = parseCatalog(premiumText, "premium");
+      if (active) {
+        setCatalogs((current) => ({
+          free: current.free ?? freeCatalog,
+          premium: current.premium ?? premiumCatalog,
+        }));
+      }
+    }
+    void loadBuiltInCatalogs().catch((cause: unknown) => {
+      if (active) setError(`Could not load the bundled tweak catalogs: ${errorMessage(cause)}`);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    function handleSearchShortcut(event: KeyboardEvent) {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        setPage("tweaks");
+        window.setTimeout(() => searchInput.current?.focus(), 0);
+      }
+    }
+    window.addEventListener("keydown", handleSearchShortcut);
+    return () => window.removeEventListener("keydown", handleSearchShortcut);
   }, []);
 
   useEffect(() => {
@@ -218,7 +259,7 @@ function App() {
 
   function requestApplyAll() {
     if (!catalog) {
-      setNotice("Import a catalog before using Apply All. No system changes were made.");
+      setNotice("A catalog must be loaded before Apply All. No system changes were made.");
       return;
     }
     setError("");
@@ -231,11 +272,31 @@ function App() {
         ? "All mapped catalog actions are already applied. No new system changes were made."
         : unavailable
           ? "A verified catalog mapping exists, but system actions are unavailable in this preview or runtime. No system changes were made."
-          : `No imported catalog tweaks have a verified mapping for ${runtime?.platform ?? "this platform"}. No system changes were made.`;
+          : `No catalog tweaks have a verified mapping for ${runtime?.platform ?? "this platform"}. No system changes were made.`;
       setNotice(message);
       return;
     }
     setPendingApply({ tier, plan: applyPlan });
+    setModal("apply");
+  }
+
+  function requestApplyOne(tweak: Tweak) {
+    if (!catalog) return;
+    setError("");
+    setNotice("");
+    const plan = buildApplyPlan(
+      [tweak],
+      runtime?.platform ?? "Unknown",
+      isNative,
+      Boolean(runtime?.actionSupported),
+      runtime?.appliedActions ?? (runtime?.actionApplied ? [ACTION_ID] : []),
+    );
+    if (plan.actionIds.length === 0) {
+      setLastRun({ tier, result: { items: plan.items }, singleItem: tweak.name });
+      setNotice("This tweak is unsupported or unavailable here. No system changes were made.");
+      return;
+    }
+    setPendingApply({ tier, plan, singleItem: tweak.name });
     setModal("apply");
   }
 
@@ -250,7 +311,7 @@ function App() {
     const result = await executeApplyPlan(pending.plan, (actionId) =>
       invoke("apply_action", { actionId }),
     );
-    setLastRun({ tier: pending.tier, result });
+    setLastRun({ tier: pending.tier, result, singleItem: pending.singleItem });
     const appliedCount = result.items.filter((item) => item.status === "applied").length;
     const skippedCount = result.items.filter((item) => item.status === "unsupported" || item.status === "unavailable").length;
     if (result.failure) {
@@ -302,15 +363,26 @@ function App() {
     setError("");
   }
 
+  function selectTier(nextTier: CatalogTier) {
+    setTier(nextTier);
+    setCategory("All categories");
+    setSearch("");
+  }
+
   return (
     <div className="app-shell">
       <aside className={`sidebar ${menuOpen ? "sidebar-open" : ""}`}>
         <div className="brand">
           <div className="brand-mark"><span>V</span></div>
-          <div><strong>VOX</strong><small>CONTROL CENTER</small></div>
+          <div><strong>VOX</strong><small>OPTIMIZE</small></div>
           <button className="icon-button mobile-close" aria-label="Close menu" onClick={() => setMenuOpen(false)}><X size={18} /></button>
         </div>
-        <div className="nav-caption">WORKSPACE</div>
+        <button className="account-card" onClick={() => session ? void signOut() : void signIn()} disabled={!session && !authConfigured} title={session ? "Sign out" : "Sign in"}>
+          <span className="avatar">{session?.user.email?.slice(0, 1).toUpperCase() ?? "V"}</span>
+          <span className="account-copy"><strong>{session?.user.email ?? "Guest"}</strong><small>{premium ? "VOX Premium" : "VOX Free"}</small></span>
+          <ChevronDown size={16} />
+        </button>
+        <div className="nav-caption">MENU</div>
         <nav className="nav-list" aria-label="Main navigation">
           {NAV_ITEMS.map(({ id, label, icon: Icon }) => (
             <button key={id} className={`nav-item ${page === id ? "active" : ""}`} onClick={() => navigate(id)}>
@@ -319,6 +391,16 @@ function App() {
             </button>
           ))}
         </nav>
+        {page === "tweaks" && categories.length > 1 && <div className="sidebar-categories">
+          <div className="nav-caption">CATEGORIES</div>
+          {categories.slice(1).map((item) => <button key={item} className={`nav-subitem ${category === item ? "active" : ""}`} onClick={() => setCategory(item)}><span className="category-mini-icon"><SlidersHorizontal size={14} /></span><span>{item}</span></button>)}
+        </div>}
+        {!premium && <section className="upgrade-card">
+          <div className="upgrade-card-art"><Sparkles size={26} /></div>
+          <strong>Upgrade to Premium</strong>
+          <small>{catalogs.premium?.tweaks.length ?? "Premium"} tweaks require verified access.</small>
+          <button className="button button-primary button-small" onClick={() => { selectTier("premium"); navigate("tweaks"); }}><Sparkles size={14} /> View Premium</button>
+        </section>}
         <div className="sidebar-bottom">
           <div className="sidebar-status"><span className={`status-dot ${runtime?.actionSupported ? "online" : ""}`} /><span>{runtime?.platform ?? "Detecting system"}</span><span className="status-label">{runtime?.actionSupported ? "READY" : "PREVIEW"}</span></div>
           <a className="external-link" href={EXTERNAL_SITE} target="_blank" rel="noreferrer">vox-tweaking-utility.netlify.app <ArrowUpRight size={14} /></a>
@@ -330,6 +412,7 @@ function App() {
         <header className="topbar">
           <div className="topbar-left"><button className="icon-button mobile-menu" aria-label="Open menu" onClick={() => setMenuOpen(true)}><Menu size={19} /></button><div className="breadcrumb">VOX <span>/</span> {NAV_ITEMS.find((item) => item.id === page)?.label}</div></div>
           <div className="topbar-actions">
+            <label className="top-search"><Search size={16} /><input ref={searchInput} value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search tweaks" /><kbd>Ctrl K</kbd></label>
             <div className="platform-chip"><Monitor size={14} /> {runtime?.platform ?? "Detecting..."}</div>
             {session ? (
               <button className="user-chip" onClick={() => void signOut()} title="Sign out">
@@ -360,21 +443,18 @@ function App() {
           />}
           {page === "tweaks" && <Tweaks
             tier={tier}
-            setTier={(nextTier) => {
-              setTier(nextTier);
-              setCategory("All categories");
-            }}
+            setTier={selectTier}
             premium={premium}
             catalog={catalog}
+            catalogs={catalogs}
             visibleTweaks={visibleTweaks}
             categories={categories}
-            search={search}
-            setSearch={setSearch}
             category={category}
             setCategory={setCategory}
             onImportFree={() => freeFile.current?.click()}
             onImportPremium={() => premiumFile.current?.click()}
             onApply={requestApplyAll}
+            onApplyOne={requestApplyOne}
             onUndo={() => void undoAction(ACTION_ID)}
             onUndoAction={(actionId) => void undoAction(actionId)}
             onSignIn={() => void signIn()}
@@ -410,10 +490,10 @@ function App() {
           <button className="icon-button modal-close" aria-label="Close confirmation" onClick={() => { setModal(null); setPendingApply(null); }}><X size={18} /></button>
           <div className="modal-icon"><SlidersHorizontal size={22} /></div>
           <div className="eyebrow">REVIEW BEFORE APPLYING</div>
-          <h2 id="apply-title">Apply mapped catalog tweaks?</h2>
-          <p>Only these exact, verified catalog entries will run for your current user. Unsupported entries will be skipped.</p>
+          <h2 id="apply-title">{pendingApply.singleItem ? `Apply ${pendingApply.singleItem}?` : "Apply all mapped catalog tweaks?"}</h2>
+          <p>{pendingApply.singleItem ? "This exact verified action will run for your current user after confirmation." : "Only exact, verified catalog entries will run for your current user. Unsupported entries will be skipped."}</p>
           {pendingApply.plan.items.filter((item) => item.status === "ready").map((item) => <div className="preview-row" key={item.id}><div className="preview-icon"><Eye size={17} /></div><div><strong>{item.name}</strong><small>Catalog ID {item.id} · {pendingApply.tier} · {runtime?.platform} · reversible</small>{item.warning && <small style={{ color: "#e1b466" }}>{item.warning}</small>}</div><span className="eligible-tag">SUPPORTED</span></div>)}
-          <div className="preview-row muted-row"><div className="preview-icon"><FileJson2 size={17} /></div><div><strong>{pendingApply.plan.items.filter((item) => item.status === "unsupported" || item.status === "unavailable").length} unsupported or unavailable records</strong><small>These have no exact mapping here or cannot run in this app context.</small></div><span className="skip-tag">SKIPPED</span></div>
+          {!pendingApply.singleItem && <div className="preview-row muted-row"><div className="preview-icon"><FileJson2 size={17} /></div><div><strong>{pendingApply.plan.items.filter((item) => item.status === "unsupported" || item.status === "unavailable").length} unsupported or unavailable records</strong><small>These have no exact mapping here or cannot run in this app context.</small></div><span className="skip-tag">SKIPPED</span></div>}
           <div className="modal-warning"><Shield size={15} /> No administrator permission is requested. No catalog command or script will run. Some visual or Explorer changes may require reopening the affected app.</div>
           <div className="modal-actions"><button className="button button-quiet" onClick={() => { setModal(null); setPendingApply(null); }}>Cancel</button><button className="button button-primary" disabled={busy || pendingApply.plan.actionIds.length === 0} onClick={() => void confirmApplyAll()}><Bolt size={16} /> Confirm &amp; apply</button></div>
         </section>
@@ -450,7 +530,7 @@ function Overview(props: {
       <div className="section-heading"><div><div className="eyebrow">AT A GLANCE</div><h2>System overview</h2></div><span className="subtle-text">A clear view of what VOX can do here.</span></div>
       <section className="stats-grid">
         <StatCard icon={Monitor} label="YOUR PLATFORM" value={runtime?.platform ?? "Checking…"} meta={runtime?.actionSupported ? "Native actions available" : runtime?.actionUnavailableReason ?? "Detecting platform"} accent="blue" />
-        <StatCard icon={SlidersHorizontal} label="CATALOG RECORDS" value={String(catalogCount)} meta={catalogCount ? "Imported metadata · not all executable" : "Import the supplied JSON catalog"} accent="violet" />
+        <StatCard icon={SlidersHorizontal} label="CATALOG RECORDS" value={String(catalogCount)} meta={catalogCount ? "Bundled metadata · not all executable" : "Loading bundled catalog metadata"} accent="violet" />
         <StatCard icon={Shield} label="VERIFIED ACTIONS" value={runtime?.actionSupported ? runtime.platform === "Windows" ? "8 catalog mappings" : "1 standalone action" : "Preview only"} meta={runtime?.actionApplied ? "Reduce UI Motion is applied" : runtime?.platform === "Windows" ? "Current-user Windows preferences" : "Catalog mappings are Windows only"} accent="mint" />
         <StatCard icon={Sparkles} label="YOUR PLAN" value={premium ? "Premium" : "Free"} meta={premium ? "Premium access verified" : "Upgrade access is server-managed"} accent="gold" />
       </section>
@@ -461,7 +541,7 @@ function Overview(props: {
         <div className="action-controls">{runtime?.actionApplied ? <button className="button button-quiet" onClick={onUndo} disabled={busy}><Undo2 size={16} /> Undo change</button> : <button className="button button-primary" onClick={onApply} disabled={busy || !runtime?.actionSupported}><Bolt size={16} /> Review &amp; apply</button>}<small>{runtime?.actionSupported ? "Supported on this device" : runtime?.actionUnavailableReason ?? "Checking support…"}</small></div>
       </section>
       <section className="quick-grid">
-        <button className="quick-card" onClick={() => onNavigate("tweaks")}><span className="quick-icon"><Gamepad2 size={19} /></span><span><strong>Browse tweak catalogs</strong><small>Import the Free or Premium JSON file</small></span><ArrowUpRight size={16} /></button>
+        <button className="quick-card" onClick={() => onNavigate("tweaks")}><span className="quick-icon"><Gamepad2 size={19} /></span><span><strong>Browse tweak catalogs</strong><small>Built-in catalogs · verified subset executable</small></span><ArrowUpRight size={16} /></button>
         <button className="quick-card" onClick={() => onNavigate("faq")}><span className="quick-icon quick-icon-soft"><CircleHelp size={19} /></span><span><strong>How VOX works</strong><small>Safety, compatibility, sign-in &amp; more</small></span><ArrowUpRight size={16} /></button>
       </section>
     </>
@@ -477,15 +557,15 @@ function Tweaks(props: {
   setTier: (tier: CatalogTier) => void;
   premium: boolean;
   catalog?: Catalog;
+  catalogs: Partial<Record<CatalogTier, Catalog>>;
   visibleTweaks: Tweak[];
   categories: string[];
-  search: string;
-  setSearch: (value: string) => void;
   category: string;
   setCategory: (value: string) => void;
   onImportFree: () => void;
   onImportPremium: () => void;
   onApply: () => void;
+  onApplyOne: (item: Tweak) => void;
   onUndo: () => void;
   onUndoAction: (actionId: string) => void;
   onSignIn: () => void;
@@ -494,55 +574,103 @@ function Tweaks(props: {
   runtime: PlatformRuntime | null;
   busy: boolean;
 }) {
-  const { tier, setTier, premium, catalog, visibleTweaks, categories, search, setSearch, category, setCategory, onImportFree, onImportPremium, onApply, onUndo, onUndoAction, onSignIn, lastRun, applyPlan, runtime, busy } = props;
+  const { tier, setTier, premium, catalog, catalogs, visibleTweaks, categories, category, setCategory, onImportFree, onImportPremium, onApply, onApplyOne, onUndo, onUndoAction, onSignIn, lastRun, applyPlan, runtime, busy } = props;
   const [riskFilter, setRiskFilter] = useState("All risk levels");
   const filtered = visibleTweaks.filter((item) => riskFilter === "All risk levels" || item.risk === riskFilter.toLowerCase());
-  const displayedResults = lastRun?.result.items ?? applyPlan.items;
+  const resultFor = (id: number) => lastRun?.result.items.find((result) => result.id === id) ?? applyPlan.items.find((result) => result.id === id);
   const unsupportedCount = applyPlan.items.filter((item) => item.status === "unsupported" || item.status === "unavailable").length;
+  const readyCount = applyPlan.items.filter((item) => item.status === "ready").length;
+  const selectedCategory = category === "All categories" ? "All tweaks" : category;
+  const countForCategory = (value: string) => value === "All categories"
+    ? catalog?.tweaks.length ?? 0
+    : catalog?.tweaks.filter((item) => item.category === value).length ?? 0;
   return (
-    <>
-      <div className="page-title-row"><div><div className="eyebrow">TUNING LIBRARY</div><h1>Tweak catalog</h1><p>Only exact, reviewed mappings can run. Unsupported entries stay informational.</p></div><button className="button button-primary" onClick={onApply} disabled={busy || !runtime || !catalog}><Bolt size={16} /> Apply All</button></div>
-      <div className="trust-banner"><Shield size={18} /><div><strong>Catalog data is not executable.</strong><span>Commands or scripts inside files are ignored. Unsupported mappings stay unsupported.</span></div><span className="trust-badge"><BadgeCheck size={14} /> STRICT ALLOWLIST</span></div>
+    <div className="optimize-page">
+      <div className="optimize-heading">
+        <div><div className="eyebrow">VOX CONTROL CENTER</div><h1>Optimize</h1><p>Review your tweaks and choose what to change.</p></div>
+        <div className="optimize-platform"><Monitor size={15} /> {runtime?.platform ?? "Detecting platform"}</div>
+      </div>
 
-      <section className="catalog-panel">
-        <div className="catalog-tabs">
-          <button className={`catalog-tab ${tier === "free" ? "selected" : ""}`} onClick={() => setTier("free")}><span className="tier-icon"><Bolt size={16} /></span><span><strong>Free</strong>          <small>{catalogsCountLabel(catalog)}</small></span>{tier === "free" && <span className="selected-line" />}</button>
-          <button className={`catalog-tab ${tier === "premium" ? "selected" : ""}`} onClick={() => setTier("premium")}><span className="tier-icon tier-icon-premium"><Sparkles size={16} /></span><span><strong>Premium <span className="pro-label">PRO</span></strong><small>{premium ? "Account access verified" : "Sign in with Premium access"}</small></span>{tier === "premium" && <span className="selected-line" />}</button>
-          <div className="catalog-tab-actions">{tier === "free" ? <button className="button button-quiet button-small" onClick={onImportFree}><CloudUpload size={15} /> Import Free JSON</button> : <button className="button button-quiet button-small" onClick={onImportPremium} disabled={!premium}><CloudUpload size={15} /> Import Premium JSON</button>}</div>
+      <nav className="category-tabs" aria-label="Tweak categories">
+        {categories.map((item) => {
+          const Icon = iconForCategory(item);
+          const active = category === item;
+          return <button key={item} className={`category-tab ${active ? "selected" : ""}`} onClick={() => setCategory(item)} aria-pressed={active}>
+            <Icon size={15} /><span>{item === "All categories" ? "All" : item}</span><small>{countForCategory(item)}</small>
+          </button>;
+        })}
+      </nav>
+
+      <div className="optimize-summary">
+        <section className="all-tweaks-panel">
+          <div className="all-tweaks-title"><span className="all-tweaks-icon"><SlidersHorizontal size={19} /></span><div><h2>{selectedCategory}</h2><small>{catalog ? `${formatCount(catalog)} in the ${tier === "free" ? "Free" : "Premium"} catalog` : "Import your catalog to see your tweaks here"}</small></div></div>
+          <p>Every catalog tweak in one place. Only exact, reversible mappings can change your system.</p>
+          <div className="category-tags">{categories.slice(1, 5).map((item) => <button key={item} onClick={() => setCategory(item)}><span />{item}</button>)}</div>
+        </section>
+        <section className="apply-all-panel">
+          <div className="apply-all-heading"><span>Apply All</span><small>{readyCount} supported here</small></div>
+          <p>{catalog ? `${unsupportedCount} entries remain unsupported or unavailable.` : "Load a catalog before applying any tweaks."}</p>
+          <button className="button button-primary apply-all-button" onClick={onApply} disabled={busy || !catalog}><Bolt size={16} /> Review &amp; Apply All</button>
+        </section>
+      </div>
+
+      <div className="catalog-toolbar">
+        <div className="tier-switch" role="group" aria-label="Catalog tier">
+          <button className={tier === "free" ? "selected" : ""} onClick={() => setTier("free")}><span>Free</span><small>{catalogs.free?.tweaks.length ?? "—"}</small></button>
+          <button className={tier === "premium" ? "selected" : ""} onClick={() => setTier("premium")}><span>Premium</span><small>{catalogs.premium?.tweaks.length ?? "—"}</small></button>
         </div>
+        <div className="catalog-toolbar-actions">
+          <label className="select-field risk-filter"><span className="sr-only">Risk level</span><span className="select-value">{riskFilter}</span><select value={riskFilter} onChange={(event) => setRiskFilter(event.target.value)}><option>All risk levels</option><option>Low</option><option>Medium</option><option>High</option></select><ChevronDown size={14} /></label>
+          <button className="button button-quiet button-small" onClick={tier === "free" ? onImportFree : onImportPremium} disabled={tier === "premium" && !premium}><CloudUpload size={15} /> Import {tier === "free" ? "Free" : "Premium"} JSON</button>
+        </div>
+      </div>
 
-        {tier === "premium" && !premium ? <div className="locked-panel"><div className="lock-art"><LockKeyhole size={24} /></div><div className="eyebrow">PREMIUM LIBRARY</div><h2>Access is tied to your account</h2><p>Sign in with the configured provider. Premium access is granted only by trusted server-side account metadata.</p><div className="locked-actions"><button className="button button-primary" disabled={!authConfigured} onClick={onSignIn}><LockKeyhole size={15} /> {authConfigured ? "Sign in to continue" : "Sign-in setup required"}</button><a className="button button-quiet" href={EXTERNAL_SITE} target="_blank" rel="noreferrer">Visit VOX site <ArrowUpRight size={15} /></a></div></div> : catalog ? <>
-          <div className="catalog-summary"><div><strong>{tier === "free" ? "Free" : "Premium"} catalog</strong><span>{formatCount(catalog)} · {unsupportedCount} unsupported or unavailable on {runtime?.platform ?? "this platform"}</span></div><span className="unsupported-count"><span className="status-dot" /> {unsupportedCount} unsupported/unavailable</span></div>
-          {lastRun && <div className={`batch-result ${lastRun.result.failure ? "batch-failure" : ""}`}><Check size={16} /><span><strong>Apply All results</strong>          <small>{lastRun.result.items.filter((item) => item.status === "applied").length} applied · {lastRun.result.items.filter((item) => item.status === "unsupported" || item.status === "unavailable").length} skipped as unsupported/unavailable · {lastRun.result.items.filter((item) => item.status === "already-applied").length} already applied{lastRun.result.failure ? " · one action failed" : ""}</small></span><BadgeCheck size={16} /></div>}
-          <div className="filter-bar"><label className="search-field"><Search size={16} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search tweaks..." /></label><label className="select-field"><span className="sr-only">Category</span><span className="select-value">{category}</span><select value={category} onChange={(event) => setCategory(event.target.value)}>{categories.map((item) => <option key={item}>{item}</option>)}</select><ChevronDown size={14} /></label><label className="select-field"><span className="sr-only">Risk level</span><span className="select-value">{riskFilter}</span><select value={riskFilter} onChange={(event) => setRiskFilter(event.target.value)}><option>All risk levels</option><option>Low</option><option>Medium</option><option>High</option></select><ChevronDown size={14} /></label></div>
-          <div className="tweak-list">{filtered.slice(0, 100).map((item) => <TweakRow key={`${tier}-${item.id}`} item={item} result={displayedResults.find((result) => result.id === item.id)} wasRun={Boolean(lastRun)} onUndoAction={onUndoAction} busy={busy} rollbackAvailable={Boolean(runtime?.appliedActions?.includes(displayedResults.find((result) => result.id === item.id)?.actionId ?? ""))} />)}</div>
-          {filtered.length > 100 && <div className="list-limit">Showing first 100 matches. Refine your search to see other entries.</div>}
-          {filtered.length === 0 && <div className="empty-state"><Search size={22} /><strong>No matching tweaks</strong><span>Try a different search or category.</span></div>}
-        </> : <div className="empty-state"><FileJson2 size={24} /><strong>No {tier} catalog loaded</strong><span>Choose the matching JSON file to inspect its metadata. Files are read locally and never uploaded.</span><button className="button button-quiet button-small" onClick={tier === "free" ? onImportFree : onImportPremium} disabled={tier === "premium" && !premium}><CloudUpload size={15} /> Select {tier} JSON</button></div>}
-      </section>
-      <section className="supported-action-row"><div className="supported-icon"><Sun size={18} /></div><div><strong>Verified system action · Reduce UI Motion</strong><small>Not sourced from imported catalog metadata. {runtime?.actionSupported ? "Available on this platform." : runtime?.actionUnavailableReason}</small></div>{runtime?.actionApplied ? <button className="button button-quiet button-small" onClick={onUndo} disabled={busy}><Undo2 size={14} /> Undo</button> : <span className="supported-tag">{runtime?.actionSupported ? "READY" : "UNAVAILABLE"}</span>}</section>
-    </>
+      {tier === "premium" && !premium ? <div className="locked-panel catalog-locked"><div className="lock-art"><LockKeyhole size={24} /></div><div className="eyebrow">PREMIUM LIBRARY</div><h2>Premium access is tied to your account</h2><p>Sign in with the configured provider. Premium access is granted only by trusted server-side account metadata.</p><div className="locked-actions"><button className="button button-primary" disabled={!authConfigured} onClick={onSignIn}><LockKeyhole size={15} /> {authConfigured ? "Sign in to continue" : "Sign-in setup required"}</button><a className="button button-quiet" href={EXTERNAL_SITE} target="_blank" rel="noreferrer">Visit VOX site <ArrowUpRight size={15} /></a></div></div> : catalog ? <>
+        <div className="catalog-meta"><span>{formatCount(catalog)} · {unsupportedCount} unsupported/unavailable on {runtime?.platform ?? "this platform"}</span><span className="verified-count"><BadgeCheck size={14} /> {readyCount} verified action{readyCount === 1 ? "" : "s"} ready</span></div>
+        {lastRun && <div className={`batch-result ${lastRun.result.failure ? "batch-failure" : ""}`}><Check size={16} /><span><strong>{lastRun.singleItem ? "Tweak result" : "Apply All results"}</strong><small>{lastRun.result.items.filter((item) => item.status === "applied").length} applied · {lastRun.result.items.filter((item) => item.status === "unsupported" || item.status === "unavailable").length} skipped · {lastRun.result.items.filter((item) => item.status === "already-applied").length} already applied{lastRun.result.failure ? " · one action failed" : ""}</small></span><BadgeCheck size={16} /></div>}
+        {filtered.length > 0 ? <div className="tweak-grid">{filtered.slice(0, 100).map((item) => {
+          const result = resultFor(item.id);
+          const rollbackAvailable = Boolean(result?.actionId && runtime?.appliedActions?.includes(result.actionId));
+          return <TweakCard key={`${tier}-${item.id}`} item={item} result={result} rollbackAvailable={rollbackAvailable} busy={busy} onApply={() => onApplyOne(item)} onUndo={() => result?.actionId && onUndoAction(result.actionId)} />;
+        })}</div> : <div className="empty-state"><Search size={22} /><strong>No matching tweaks</strong><span>Try another category or search term.</span></div>}
+        {filtered.length > 100 && <div className="list-limit">Showing 100 of {filtered.length} matches. Refine your search to find other tweaks.</div>}
+      </> : <div className="empty-state catalog-empty"><FileJson2 size={24} /><strong>No {tier} catalog loaded</strong><span>The bundled file could not be loaded. Choose a replacement JSON catalog.</span><button className="button button-primary button-small" onClick={tier === "free" ? onImportFree : onImportPremium} disabled={tier === "premium" && !premium}><CloudUpload size={15} /> Import {tier} catalog</button></div>}
+
+      <section className="supported-action-row"><div className="supported-icon"><Sun size={18} /></div><div><strong>Standalone action · Reduce UI Motion</strong><small>Separate from catalog Apply All. {runtime?.actionSupported ? "Available on this platform." : runtime?.actionUnavailableReason}</small></div>{runtime?.actionApplied ? <button className="button button-quiet button-small" onClick={onUndo} disabled={busy}><Undo2 size={14} /> Undo</button> : <span className="supported-tag">{runtime?.actionSupported ? "READY" : "UNAVAILABLE"}</span>}</section>
+    </div>
   );
 }
 
-function catalogsCountLabel(current?: Catalog) {
-  return current ? formatCount(current) : "Not imported";
+function iconForCategory(category: string) {
+  const value = category.toLowerCase();
+  if (value.includes("privacy") || value.includes("security")) return Shield;
+  if (value.includes("graphic") || value.includes("visual") || value.includes("display")) return Eye;
+  if (value.includes("game")) return Gamepad2;
+  if (value.includes("performance")) return Bolt;
+  if (value.includes("cleanup") || value.includes("storage")) return FileJson2;
+  return SlidersHorizontal;
 }
 
-function TweakRow({ item, result, wasRun, onUndoAction, busy, rollbackAvailable }: { item: Tweak; result?: BatchItemResult; wasRun: boolean; onUndoAction: (actionId: string) => void; busy: boolean; rollbackAvailable: boolean }) {
+function TweakCard({ item, result, rollbackAvailable, busy, onApply, onUndo }: { item: Tweak; result?: BatchItemResult; rollbackAvailable: boolean; busy: boolean; onApply: () => void; onUndo: () => void }) {
   const outcome = result?.status ?? "unsupported";
   const outcomeLabel: Record<BatchItemStatus, string> = {
-    ready: "Mapped · ready",
-    unsupported: wasRun ? "Skipped · unsupported" : result?.platform ? `${result.platform} only` : "No verified mapping",
-    unavailable: "Unavailable in this app",
-    "already-applied": "Already applied",
+    ready: "Ready to apply",
+    unsupported: result?.platform ? `${result.platform} only` : "Not mapped",
+    unavailable: "Desktop app required",
+    "already-applied": "Applied",
     applied: "Applied",
     failed: "Failed",
     "not-run": "Not run",
   };
   const actionId = result?.actionId;
-  const undoable = actionId !== undefined && rollbackAvailable;
-  return <article className="tweak-row"><div className="tweak-category-icon"><Settings2 size={16} /></div><div className="tweak-info"><strong>{item.name}</strong><small title={result?.warning}>{item.category}{result?.warning ? ` · ${result.warning}` : ""}</small></div><span className={`risk-pill risk-${item.risk}`}>{item.risk}</span><span className={`unsupported-pill outcome-${outcome}`}>{outcomeLabel[outcome]}</span>{undoable ? <button className="button button-quiet button-small tweak-undo" onClick={() => onUndoAction(actionId)} disabled={busy}><Undo2 size={13} /> Undo</button> : <button className="icon-button disabled-icon" aria-label={outcomeLabel[outcome]} title={outcomeLabel[outcome]} disabled><LockKeyhole size={15} /></button>}</article>;
+  const applied = outcome === "applied" || outcome === "already-applied" || Boolean(outcome === "failed" && actionId && rollbackAvailable);
+  const toggleEnabled = applied || outcome === "ready";
+  const Icon = iconForCategory(item.category);
+  return <article className={`tweak-card outcome-card-${outcome}`}>
+    <div className="tweak-card-icon"><Icon size={17} /></div>
+    <div className="tweak-card-content"><div className="tweak-card-heading"><strong>{item.name}</strong><span className={`tweak-state state-${outcome}`} title={result?.warning}>{outcomeLabel[outcome]}</span></div><small>Catalog ID {item.id} · {item.category}</small>{result?.warning && <small className="tweak-warning">{result.warning}</small>}<span className={`risk-pill risk-${item.risk}`}>{item.risk} risk</span></div>
+    <button className={`tweak-switch ${applied ? "on" : ""}`} type="button" role="switch" aria-checked={applied} aria-label={`${applied ? "Undo" : "Apply"} ${item.name}`} title={toggleEnabled ? `${applied ? "Undo" : "Apply"} ${item.name}` : outcomeLabel[outcome]} disabled={busy || !toggleEnabled} onClick={applied ? onUndo : onApply}><span /></button>
+  </article>;
 }
 
 function Faq() {

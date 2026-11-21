@@ -1,6 +1,7 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it, vi } from "vitest";
 import { buildApplyPlan, executeApplyPlan } from "./batch";
-import type { Tweak } from "./catalog";
+import { parseCatalog, type CatalogTier, type Tweak } from "./catalog";
 
 const mapped: Tweak = {
   id: 177,
@@ -16,6 +17,23 @@ const unsupported: Tweak = {
 };
 
 describe("catalog Apply All planning", () => {
+  it("loads both bundled catalogs and exposes only the reviewed mappings", () => {
+    const supportedIds = [176, 177, 185, 201, 202, 204, 205, 206];
+    const bundledCatalogs: Array<{ tier: CatalogTier; count: number }> = [
+      { tier: "free", count: 274 },
+      { tier: "premium", count: 842 },
+    ];
+
+    for (const { tier, count } of bundledCatalogs) {
+      const text = readFileSync(new URL(`../public/catalogs/${tier}.json`, import.meta.url), "utf8");
+      const catalog = parseCatalog(text, tier);
+      const plan = buildApplyPlan(catalog.tweaks, "Windows", true, true, []);
+
+      expect(catalog.tweaks).toHaveLength(count);
+      expect(plan.items.filter(({ status }) => status === "ready").map(({ id }) => id)).toEqual(supportedIds);
+    }
+  });
+
   it("maps only the exact verified record on a supported Windows desktop", () => {
     const plan = buildApplyPlan([mapped, unsupported], "Windows", true, true, []);
 

@@ -1,0 +1,5058 @@
+{
+ "app": "Vox",
+ "count": 842,
+ "tweaks": [
+  {
+   "id": 1,
+   "name": "Enable Ultimate Performance Power Plan",
+   "category": "Performance",
+   "risk": "low"
+  },
+  {
+   "id": 2,
+   "name": "Disable Power Throttling",
+   "category": "Performance",
+   "risk": "low"
+  },
+  {
+   "id": 3,
+   "name": "Disable CPU Core Parking",
+   "category": "Performance",
+   "risk": "low"
+  },
+  {
+   "id": 4,
+   "name": "Set Processor Performance Boost Mode to Aggressive",
+   "category": "Performance",
+   "risk": "low"
+  },
+  {
+   "id": 5,
+   "name": "Disable Hibernation",
+   "category": "Performance",
+   "risk": "low"
+  },
+  {
+   "id": 6,
+   "name": "Disable Fast Startup",
+   "category": "Performance",
+   "risk": "low"
+  },
+  {
+   "id": 7,
+   "name": "Disable SysMain (Superfetch)",
+   "category": "Performance",
+   "risk": "low"
+  },
+  {
+   "id": 8,
+   "name": "Disable Prefetcher",
+   "category": "Performance",
+   "risk": "low"
+  },
+  {
+   "id": 9,
+   "name": "Disable Windows Search Indexing",
+   "category": "Performance",
+   "risk": "low"
+  },
+  {
+   "id": 10,
+   "name": "Disable Background Apps",
+   "category": "Performance",
+   "risk": "low"
+  },
+  {
+   "id": 11,
+   "name": "Disable Memory Compression",
+   "category": "Performance",
+   "risk": "medium"
+  },
+  {
+   "id": 12,
+   "name": "Optimize Processor Scheduling for Programs",
+   "category": "Performance",
+   "risk": "low"
+  },
+  {
+   "id": 13,
+   "name": "Disable Paging Executive",
+   "category": "Performance",
+   "risk": "medium"
+  },
+  {
+   "id": 14,
+   "name": "Lower System Responsiveness Reserve",
+   "category": "Performance",
+   "risk": "low"
+  },
+  {
+   "id": 15,
+   "name": "Disable Windows Tips and Suggestions",
+   "category": "Performance",
+   "risk": "low"
+  },
+  {
+   "id": 16,
+   "name": "Disable Delivery Optimization",
+   "category": "Performance",
+   "risk": "low"
+  },
+  {
+   "id": 17,
+   "name": "Disable Remote Assistance",
+   "category": "Performance",
+   "risk": "low"
+  },
+  {
+   "id": 18,
+   "name": "Disable Remote Desktop",
+   "category": "Performance",
+   "risk": "low"
+  },
+  {
+   "id": 19,
+   "name": "Disable Windows Error Reporting",
+   "category": "Performance",
+   "risk": "low"
+  },
+  {
+   "id": 20,
+   "name": "Disable Program Compatibility Assistant",
+   "category": "Performance",
+   "risk": "low"
+  },
+  {
+   "id": 21,
+   "name": "Disable Diagnostic Policy Service",
+   "category": "Performance",
+   "risk": "medium"
+  },
+  {
+   "id": 22,
+   "name": "Reduce Menu Show Delay",
+   "category": "Performance",
+   "risk": "low"
+  },
+  {
+   "id": 23,
+   "name": "Reduce Service Shutdown Timeout",
+   "category": "Performance",
+   "risk": "low"
+  },
+  {
+   "id": 24,
+   "name": "Auto End Hung Tasks",
+   "category": "Performance",
+   "risk": "low"
+  },
+  {
+   "id": 25,
+   "name": "Reduce Hung App Timeout",
+   "category": "Performance",
+   "risk": "low"
+  },
+  {
+   "id": 26,
+   "name": "Disable Boot Animation",
+   "category": "Performance",
+   "risk": "low"
+  },
+  {
+   "id": 27,
+   "name": "Disable Boot Logo",
+   "category": "Performance",
+   "risk": "low"
+  },
+  {
+   "id": 28,
+   "name": "Disable Lock Screen Blur",
+   "category": "Performance",
+   "risk": "low"
+  },
+  {
+   "id": 29,
+   "name": "Disable Startup App Delay",
+   "category": "Performance",
+   "risk": "low"
+  },
+  {
+   "id": 30,
+   "name": "Disable Scheduled Defrag on SSD",
+   "category": "Performance",
+   "risk": "low"
+  },
+  {
+   "id": 31,
+   "name": "Enable Game Mode",
+   "category": "Gaming",
+   "risk": "low"
+  },
+  {
+   "id": 32,
+   "name": "Disable Xbox Game Bar",
+   "category": "Gaming",
+   "risk": "low"
+  },
+  {
+   "id": 33,
+   "name": "Disable Game DVR",
+   "category": "Gaming",
+   "risk": "low"
+  },
+  {
+   "id": 34,
+   "name": "Disable Fullscreen Optimizations",
+   "category": "Gaming",
+   "risk": "low"
+  },
+  {
+   "id": 35,
+   "name": "Enable Hardware-Accelerated GPU Scheduling",
+   "category": "Gaming",
+   "risk": "low"
+  },
+  {
+   "id": 36,
+   "name": "Set GPU Priority for Games to High",
+   "category": "Gaming",
+   "risk": "low"
+  },
+  {
+   "id": 37,
+   "name": "Set CPU Priority for Games to High",
+   "category": "Gaming",
+   "risk": "low"
+  },
+  {
+   "id": 38,
+   "name": "Set Games Scheduling Category to High",
+   "category": "Gaming",
+   "risk": "low"
+  },
+  {
+   "id": 39,
+   "name": "Set Games SFIO Priority to High",
+   "category": "Gaming",
+   "risk": "low"
+  },
+  {
+   "id": 40,
+   "name": "Disable Xbox Live Auth Manager",
+   "category": "Gaming",
+   "risk": "medium"
+  },
+  {
+   "id": 41,
+   "name": "Disable Xbox Live Game Save",
+   "category": "Gaming",
+   "risk": "medium"
+  },
+  {
+   "id": 42,
+   "name": "Disable Xbox Live Networking Service",
+   "category": "Gaming",
+   "risk": "medium"
+  },
+  {
+   "id": 43,
+   "name": "Disable Multiplane Overlay",
+   "category": "Gaming",
+   "risk": "low"
+  },
+  {
+   "id": 44,
+   "name": "Disable Variable Refresh Rate Windowed Optimizations",
+   "category": "Gaming",
+   "risk": "low"
+  },
+  {
+   "id": 45,
+   "name": "Enable Windowed Game Optimizations",
+   "category": "Gaming",
+   "risk": "low"
+  },
+  {
+   "id": 46,
+   "name": "Disable Game Mode Notifications",
+   "category": "Gaming",
+   "risk": "low"
+  },
+  {
+   "id": 47,
+   "name": "Disable Captures Recording",
+   "category": "Gaming",
+   "risk": "low"
+  },
+  {
+   "id": 48,
+   "name": "Disable Background Recording",
+   "category": "Gaming",
+   "risk": "low"
+  },
+  {
+   "id": 49,
+   "name": "Disable Nagle's Algorithm for Games",
+   "category": "Gaming",
+   "risk": "low"
+  },
+  {
+   "id": 50,
+   "name": "Disable Mouse Acceleration",
+   "category": "Gaming",
+   "risk": "low"
+  },
+  {
+   "id": 51,
+   "name": "Disable Enhance Pointer Precision",
+   "category": "Gaming",
+   "risk": "low"
+  },
+  {
+   "id": 52,
+   "name": "Optimize Mouse Polling",
+   "category": "Gaming",
+   "risk": "low"
+  },
+  {
+   "id": 53,
+   "name": "Reduce Mouse Input Buffer Latency",
+   "category": "Gaming",
+   "risk": "low"
+  },
+  {
+   "id": 54,
+   "name": "Reduce Keyboard Repeat Delay",
+   "category": "Gaming",
+   "risk": "low"
+  },
+  {
+   "id": 55,
+   "name": "Increase Keyboard Repeat Rate",
+   "category": "Gaming",
+   "risk": "low"
+  },
+  {
+   "id": 56,
+   "name": "Disable Sticky Keys Shortcut",
+   "category": "Gaming",
+   "risk": "low"
+  },
+  {
+   "id": 57,
+   "name": "Disable Filter Keys Shortcut",
+   "category": "Gaming",
+   "risk": "low"
+  },
+  {
+   "id": 58,
+   "name": "Disable Toggle Keys Shortcut",
+   "category": "Gaming",
+   "risk": "low"
+  },
+  {
+   "id": 59,
+   "name": "Disable Core Isolation Memory Integrity",
+   "category": "Gaming",
+   "risk": "high"
+  },
+  {
+   "id": 60,
+   "name": "Disable Virtualization-Based Security",
+   "category": "Gaming",
+   "risk": "high"
+  },
+  {
+   "id": 61,
+   "name": "Disable Spectre and Meltdown Mitigations",
+   "category": "Gaming",
+   "risk": "high"
+  },
+  {
+   "id": 62,
+   "name": "Disable Timer Coalescing",
+   "category": "Gaming",
+   "risk": "medium"
+  },
+  {
+   "id": 63,
+   "name": "Set Timer Resolution to Maximum",
+   "category": "Gaming",
+   "risk": "medium"
+  },
+  {
+   "id": 64,
+   "name": "Disable Dynamic Tick",
+   "category": "Gaming",
+   "risk": "medium"
+  },
+  {
+   "id": 65,
+   "name": "Disable HPET Platform Clock",
+   "category": "Gaming",
+   "risk": "medium"
+  },
+  {
+   "id": 66,
+   "name": "Disable Network Throttling Index",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 67,
+   "name": "Disable TCP Auto-Tuning Heuristics",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 68,
+   "name": "Set TCP Auto-Tuning Level to Normal",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 69,
+   "name": "Enable TCP Fast Open",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 70,
+   "name": "Disable TCP Chimney Offload",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 71,
+   "name": "Enable Receive Side Scaling",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 72,
+   "name": "Disable Receive Segment Coalescing",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 73,
+   "name": "Disable Large Send Offload",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 74,
+   "name": "Disable Interrupt Moderation",
+   "category": "Network",
+   "risk": "medium"
+  },
+  {
+   "id": 75,
+   "name": "Disable Energy Efficient Ethernet",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 76,
+   "name": "Disable Green Ethernet",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 77,
+   "name": "Disable Flow Control on NIC",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 78,
+   "name": "Set TCP ACK Frequency to 1",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 79,
+   "name": "Enable TCP No Delay",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 80,
+   "name": "Remove QoS Reserved Bandwidth Limit",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 81,
+   "name": "Increase Max Connections Per Server",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 82,
+   "name": "Set Default TTL to 64",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 83,
+   "name": "Disable IPv6",
+   "category": "Network",
+   "risk": "medium"
+  },
+  {
+   "id": 84,
+   "name": "Disable Teredo Tunneling",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 85,
+   "name": "Disable ISATAP",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 86,
+   "name": "Disable 6to4",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 87,
+   "name": "Set DNS to Cloudflare 1.1.1.1",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 88,
+   "name": "Set DNS to Google 8.8.8.8",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 89,
+   "name": "Enable DNS over HTTPS",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 90,
+   "name": "Increase DNS Cache Size",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 91,
+   "name": "Flush DNS Cache on Startup",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 92,
+   "name": "Disable LLMNR",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 93,
+   "name": "Disable NetBIOS over TCP/IP",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 94,
+   "name": "Disable Wi-Fi Sense",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 95,
+   "name": "Disable Auto Connect to Wi-Fi Hotspots",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 96,
+   "name": "Disable Network Location Awareness Polling",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 97,
+   "name": "Disable SMBv1",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 98,
+   "name": "Disable Lanman Server Service",
+   "category": "Network",
+   "risk": "medium"
+  },
+  {
+   "id": 99,
+   "name": "Disable Windows Connect Now",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 100,
+   "name": "Disable Hotspot 2.0",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 101,
+   "name": "Disable Advertising ID",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 102,
+   "name": "Disable Location Tracking",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 103,
+   "name": "Disable Activity History",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 104,
+   "name": "Disable Clipboard History",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 105,
+   "name": "Disable Cloud Clipboard Sync",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 106,
+   "name": "Disable Camera Access for Apps",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 107,
+   "name": "Disable Microphone Access for Apps",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 108,
+   "name": "Disable Online Speech Recognition",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 109,
+   "name": "Disable Inking and Typing Personalization",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 110,
+   "name": "Disable Handwriting Data Sharing",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 111,
+   "name": "Disable Feedback Notifications",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 112,
+   "name": "Disable Tailored Experiences",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 113,
+   "name": "Disable Bing Search in Start Menu",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 114,
+   "name": "Disable Web Search in Taskbar",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 115,
+   "name": "Disable Cortana",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 116,
+   "name": "Disable Windows Copilot",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 117,
+   "name": "Disable Windows Recall",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 118,
+   "name": "Disable Widgets",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 119,
+   "name": "Disable News and Interests",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 120,
+   "name": "Disable Suggested Apps in Start",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 121,
+   "name": "Disable Silent App Installs",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 122,
+   "name": "Disable Windows Spotlight on Lock Screen",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 123,
+   "name": "Disable Account Info Access for Apps",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 124,
+   "name": "Disable Contacts Access for Apps",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 125,
+   "name": "Disable Calendar Access for Apps",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 126,
+   "name": "Disable Call History Access for Apps",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 127,
+   "name": "Disable Email Access for Apps",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 128,
+   "name": "Disable Messaging Access for Apps",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 129,
+   "name": "Disable Radio Control Access for Apps",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 130,
+   "name": "Disable App Diagnostics Access",
+   "category": "Privacy",
+   "risk": "low"
+  },
+  {
+   "id": 131,
+   "name": "Set Telemetry to Security Level",
+   "category": "Telemetry",
+   "risk": "low"
+  },
+  {
+   "id": 132,
+   "name": "Disable Connected User Experiences and Telemetry Service",
+   "category": "Telemetry",
+   "risk": "low"
+  },
+  {
+   "id": 133,
+   "name": "Disable dmwappushservice",
+   "category": "Telemetry",
+   "risk": "low"
+  },
+  {
+   "id": 134,
+   "name": "Disable Customer Experience Improvement Program",
+   "category": "Telemetry",
+   "risk": "low"
+  },
+  {
+   "id": 135,
+   "name": "Disable Application Telemetry",
+   "category": "Telemetry",
+   "risk": "low"
+  },
+  {
+   "id": 136,
+   "name": "Disable Inventory Collector",
+   "category": "Telemetry",
+   "risk": "low"
+  },
+  {
+   "id": 137,
+   "name": "Disable Steps Recorder",
+   "category": "Telemetry",
+   "risk": "low"
+  },
+  {
+   "id": 138,
+   "name": "Disable Compatibility Telemetry Tasks",
+   "category": "Telemetry",
+   "risk": "low"
+  },
+  {
+   "id": 139,
+   "name": "Disable Consolidator Task",
+   "category": "Telemetry",
+   "risk": "low"
+  },
+  {
+   "id": 140,
+   "name": "Disable Usage Data Upload Task",
+   "category": "Telemetry",
+   "risk": "low"
+  },
+  {
+   "id": 141,
+   "name": "Disable Device Census Task",
+   "category": "Telemetry",
+   "risk": "low"
+  },
+  {
+   "id": 142,
+   "name": "Disable Microsoft Edge Telemetry",
+   "category": "Telemetry",
+   "risk": "low"
+  },
+  {
+   "id": 143,
+   "name": "Disable Edge Startup Boost",
+   "category": "Telemetry",
+   "risk": "low"
+  },
+  {
+   "id": 144,
+   "name": "Disable Edge Background Running",
+   "category": "Telemetry",
+   "risk": "low"
+  },
+  {
+   "id": 145,
+   "name": "Disable Office Telemetry",
+   "category": "Telemetry",
+   "risk": "low"
+  },
+  {
+   "id": 146,
+   "name": "Disable Visual Studio Telemetry",
+   "category": "Telemetry",
+   "risk": "low"
+  },
+  {
+   "id": 147,
+   "name": "Disable NVIDIA Telemetry",
+   "category": "Telemetry",
+   "risk": "low"
+  },
+  {
+   "id": 148,
+   "name": "Disable AMD Telemetry",
+   "category": "Telemetry",
+   "risk": "low"
+  },
+  {
+   "id": 149,
+   "name": "Disable Windows Update Telemetry Sharing",
+   "category": "Telemetry",
+   "risk": "low"
+  },
+  {
+   "id": 150,
+   "name": "Disable Diagnostic Data Viewer Collection",
+   "category": "Telemetry",
+   "risk": "low"
+  },
+  {
+   "id": 151,
+   "name": "Disable Print Spooler (No Printer)",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 152,
+   "name": "Disable Fax Service",
+   "category": "Services",
+   "risk": "low"
+  },
+  {
+   "id": 153,
+   "name": "Disable Bluetooth Support Service (No Bluetooth)",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 154,
+   "name": "Disable Touch Keyboard Service",
+   "category": "Services",
+   "risk": "low"
+  },
+  {
+   "id": 155,
+   "name": "Disable Windows Biometric Service",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 156,
+   "name": "Disable Smart Card Service",
+   "category": "Services",
+   "risk": "low"
+  },
+  {
+   "id": 157,
+   "name": "Disable Retail Demo Service",
+   "category": "Services",
+   "risk": "low"
+  },
+  {
+   "id": 158,
+   "name": "Disable Geolocation Service",
+   "category": "Services",
+   "risk": "low"
+  },
+  {
+   "id": 159,
+   "name": "Disable Downloaded Maps Manager",
+   "category": "Services",
+   "risk": "low"
+  },
+  {
+   "id": 160,
+   "name": "Disable Parental Controls Service",
+   "category": "Services",
+   "risk": "low"
+  },
+  {
+   "id": 161,
+   "name": "Disable Phone Service",
+   "category": "Services",
+   "risk": "low"
+  },
+  {
+   "id": 162,
+   "name": "Disable Windows Insider Service",
+   "category": "Services",
+   "risk": "low"
+  },
+  {
+   "id": 163,
+   "name": "Disable Mobile Hotspot Service",
+   "category": "Services",
+   "risk": "low"
+  },
+  {
+   "id": 164,
+   "name": "Disable Secondary Logon",
+   "category": "Services",
+   "risk": "low"
+  },
+  {
+   "id": 165,
+   "name": "Disable Distributed Link Tracking Client",
+   "category": "Services",
+   "risk": "low"
+  },
+  {
+   "id": 166,
+   "name": "Disable Offline Files",
+   "category": "Services",
+   "risk": "low"
+  },
+  {
+   "id": 167,
+   "name": "Disable Program Compatibility Service",
+   "category": "Services",
+   "risk": "low"
+  },
+  {
+   "id": 168,
+   "name": "Disable Remote Registry",
+   "category": "Services",
+   "risk": "low"
+  },
+  {
+   "id": 169,
+   "name": "Disable Windows Image Acquisition",
+   "category": "Services",
+   "risk": "low"
+  },
+  {
+   "id": 170,
+   "name": "Disable Sensor Services",
+   "category": "Services",
+   "risk": "low"
+  },
+  {
+   "id": 171,
+   "name": "Disable Netlogon",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 172,
+   "name": "Disable Wallet Service",
+   "category": "Services",
+   "risk": "low"
+  },
+  {
+   "id": 173,
+   "name": "Disable Payments and NFC Service",
+   "category": "Services",
+   "risk": "low"
+  },
+  {
+   "id": 174,
+   "name": "Disable Connected Devices Platform Service",
+   "category": "Services",
+   "risk": "low"
+  },
+  {
+   "id": 175,
+   "name": "Set Non-Essential Services to Manual",
+   "category": "Services",
+   "risk": "low"
+  },
+  {
+   "id": 176,
+   "name": "Disable Transparency Effects",
+   "category": "Visual",
+   "risk": "low"
+  },
+  {
+   "id": 177,
+   "name": "Disable Window Animations",
+   "category": "Visual",
+   "risk": "low"
+  },
+  {
+   "id": 178,
+   "name": "Disable Taskbar Animations",
+   "category": "Visual",
+   "risk": "low"
+  },
+  {
+   "id": 179,
+   "name": "Disable Smooth Scrolling",
+   "category": "Visual",
+   "risk": "low"
+  },
+  {
+   "id": 180,
+   "name": "Disable Menu Fade Effects",
+   "category": "Visual",
+   "risk": "low"
+  },
+  {
+   "id": 181,
+   "name": "Disable Shadows Under Windows",
+   "category": "Visual",
+   "risk": "low"
+  },
+  {
+   "id": 182,
+   "name": "Disable Peek Preview",
+   "category": "Visual",
+   "risk": "low"
+  },
+  {
+   "id": 183,
+   "name": "Disable Aero Shake",
+   "category": "Visual",
+   "risk": "low"
+  },
+  {
+   "id": 184,
+   "name": "Disable Snap Assist Flyout",
+   "category": "Visual",
+   "risk": "low"
+  },
+  {
+   "id": 185,
+   "name": "Enable Dark Mode",
+   "category": "Visual",
+   "risk": "low"
+  },
+  {
+   "id": 186,
+   "name": "Disable Accent Color on Title Bars",
+   "category": "Visual",
+   "risk": "low"
+  },
+  {
+   "id": 187,
+   "name": "Set Visual Effects to Best Performance",
+   "category": "Visual",
+   "risk": "low"
+  },
+  {
+   "id": 188,
+   "name": "Disable Thumbnail Previews",
+   "category": "Visual",
+   "risk": "low"
+  },
+  {
+   "id": 189,
+   "name": "Show Icons Instead of Thumbnails",
+   "category": "Visual",
+   "risk": "low"
+  },
+  {
+   "id": 190,
+   "name": "Disable Font Smoothing Animation",
+   "category": "Visual",
+   "risk": "low"
+  },
+  {
+   "id": 191,
+   "name": "Disable Cursor Shadow",
+   "category": "Visual",
+   "risk": "low"
+  },
+  {
+   "id": 192,
+   "name": "Disable Show Window Contents While Dragging",
+   "category": "Visual",
+   "risk": "low"
+  },
+  {
+   "id": 193,
+   "name": "Enable ClearType",
+   "category": "Visual",
+   "risk": "low"
+  },
+  {
+   "id": 194,
+   "name": "Disable Lock Screen",
+   "category": "Visual",
+   "risk": "low"
+  },
+  {
+   "id": 195,
+   "name": "Disable Login Background Image",
+   "category": "Visual",
+   "risk": "low"
+  },
+  {
+   "id": 196,
+   "name": "Disable Startup Sound",
+   "category": "Visual",
+   "risk": "low"
+  },
+  {
+   "id": 197,
+   "name": "Disable System Sounds",
+   "category": "Visual",
+   "risk": "low"
+  },
+  {
+   "id": 198,
+   "name": "Disable Notification Sounds",
+   "category": "Visual",
+   "risk": "low"
+  },
+  {
+   "id": 199,
+   "name": "Disable Action Center Notifications",
+   "category": "Visual",
+   "risk": "low"
+  },
+  {
+   "id": 200,
+   "name": "Disable Focus Assist Prompts",
+   "category": "Visual",
+   "risk": "low"
+  },
+  {
+   "id": 201,
+   "name": "Show File Extensions",
+   "category": "Explorer",
+   "risk": "low"
+  },
+  {
+   "id": 202,
+   "name": "Show Hidden Files",
+   "category": "Explorer",
+   "risk": "low"
+  },
+  {
+   "id": 203,
+   "name": "Show Protected OS Files",
+   "category": "Explorer",
+   "risk": "medium"
+  },
+  {
+   "id": 204,
+   "name": "Open Explorer to This PC",
+   "category": "Explorer",
+   "risk": "low"
+  },
+  {
+   "id": 205,
+   "name": "Disable Quick Access Recent Files",
+   "category": "Explorer",
+   "risk": "low"
+  },
+  {
+   "id": 206,
+   "name": "Disable Quick Access Frequent Folders",
+   "category": "Explorer",
+   "risk": "low"
+  },
+  {
+   "id": 207,
+   "name": "Disable OneDrive Integration",
+   "category": "Explorer",
+   "risk": "low"
+  },
+  {
+   "id": 208,
+   "name": "Disable OneDrive Startup",
+   "category": "Explorer",
+   "risk": "low"
+  },
+  {
+   "id": 209,
+   "name": "Restore Classic Context Menu",
+   "category": "Explorer",
+   "risk": "low"
+  },
+  {
+   "id": 210,
+   "name": "Disable Recent Items in Jump Lists",
+   "category": "Explorer",
+   "risk": "low"
+  },
+  {
+   "id": 211,
+   "name": "Disable Explorer Search History",
+   "category": "Explorer",
+   "risk": "low"
+  },
+  {
+   "id": 212,
+   "name": "Disable Network Folder Auto Discovery",
+   "category": "Explorer",
+   "risk": "low"
+  },
+  {
+   "id": 213,
+   "name": "Disable Folder Type Auto Discovery",
+   "category": "Explorer",
+   "risk": "low"
+  },
+  {
+   "id": 214,
+   "name": "Launch Explorer Windows in Separate Processes",
+   "category": "Explorer",
+   "risk": "low"
+  },
+  {
+   "id": 215,
+   "name": "Remove Shortcut Arrow Overlay",
+   "category": "Explorer",
+   "risk": "low"
+  },
+  {
+   "id": 216,
+   "name": "Remove \"- Shortcut\" Suffix",
+   "category": "Explorer",
+   "risk": "low"
+  },
+  {
+   "id": 217,
+   "name": "Remove 3D Objects Folder",
+   "category": "Explorer",
+   "risk": "low"
+  },
+  {
+   "id": 218,
+   "name": "Enable Compact View Spacing",
+   "category": "Explorer",
+   "risk": "low"
+  },
+  {
+   "id": 219,
+   "name": "Disable Sync Provider Notifications",
+   "category": "Explorer",
+   "risk": "low"
+  },
+  {
+   "id": 220,
+   "name": "Disable Explorer Status Bar Hints",
+   "category": "Explorer",
+   "risk": "low"
+  },
+  {
+   "id": 221,
+   "name": "Show Full Path in Title Bar",
+   "category": "Explorer",
+   "risk": "low"
+  },
+  {
+   "id": 222,
+   "name": "Disable Low Disk Space Warning",
+   "category": "Explorer",
+   "risk": "low"
+  },
+  {
+   "id": 223,
+   "name": "Disable AutoPlay",
+   "category": "Explorer",
+   "risk": "low"
+  },
+  {
+   "id": 224,
+   "name": "Disable AutoRun",
+   "category": "Explorer",
+   "risk": "low"
+  },
+  {
+   "id": 225,
+   "name": "Hide Desktop Spotlight Icon",
+   "category": "Explorer",
+   "risk": "low"
+  },
+  {
+   "id": 226,
+   "name": "Disable USB Selective Suspend",
+   "category": "Power",
+   "risk": "low"
+  },
+  {
+   "id": 227,
+   "name": "Disable PCI Express Link State Power Management",
+   "category": "Power",
+   "risk": "low"
+  },
+  {
+   "id": 228,
+   "name": "Disable Hard Disk Turn Off",
+   "category": "Power",
+   "risk": "low"
+  },
+  {
+   "id": 229,
+   "name": "Disable Display Sleep on AC",
+   "category": "Power",
+   "risk": "low"
+  },
+  {
+   "id": 230,
+   "name": "Disable System Sleep on AC",
+   "category": "Power",
+   "risk": "low"
+  },
+  {
+   "id": 231,
+   "name": "Disable Wake Timers",
+   "category": "Power",
+   "risk": "low"
+  },
+  {
+   "id": 232,
+   "name": "Disable Connected Standby",
+   "category": "Power",
+   "risk": "medium"
+  },
+  {
+   "id": 233,
+   "name": "Disable Lid Close Action on AC",
+   "category": "Power",
+   "risk": "low"
+  },
+  {
+   "id": 234,
+   "name": "Set Power Button Action to Shutdown",
+   "category": "Power",
+   "risk": "low"
+  },
+  {
+   "id": 235,
+   "name": "Disable Adaptive Brightness",
+   "category": "Power",
+   "risk": "low"
+  },
+  {
+   "id": 236,
+   "name": "Disable CPU Idle States",
+   "category": "Power",
+   "risk": "medium"
+  },
+  {
+   "id": 237,
+   "name": "Set Minimum Processor State to 100%",
+   "category": "Power",
+   "risk": "medium"
+  },
+  {
+   "id": 238,
+   "name": "Disable Intel SpeedStep Throttling",
+   "category": "Power",
+   "risk": "medium"
+  },
+  {
+   "id": 239,
+   "name": "Disable AMD Cool'n'Quiet",
+   "category": "Power",
+   "risk": "medium"
+  },
+  {
+   "id": 240,
+   "name": "Disable Wireless Adapter Power Saving",
+   "category": "Power",
+   "risk": "low"
+  },
+  {
+   "id": 241,
+   "name": "Clear Temp Files",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 242,
+   "name": "Clear Windows Update Cache",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 243,
+   "name": "Clear Prefetch Folder",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 244,
+   "name": "Clear Thumbnail Cache",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 245,
+   "name": "Clear Windows Error Reports",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 246,
+   "name": "Clear Event Logs",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 247,
+   "name": "Clear DNS Cache",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 248,
+   "name": "Empty Recycle Bin",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 249,
+   "name": "Clear Browser Caches",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 250,
+   "name": "Clear Shader Cache",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 251,
+   "name": "Clear Delivery Optimization Cache",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 252,
+   "name": "Clear Windows Defender Scan History",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 253,
+   "name": "Clear Old Windows Installation Files",
+   "category": "Cleanup",
+   "risk": "medium"
+  },
+  {
+   "id": 254,
+   "name": "Enable Storage Sense",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 255,
+   "name": "Enable SSD TRIM",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 256,
+   "name": "Disable NTFS Last Access Time",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 257,
+   "name": "Disable NTFS 8.3 Short Names",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 258,
+   "name": "Increase NTFS Memory Usage",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 259,
+   "name": "Set NVIDIA Power Management to Max Performance",
+   "category": "GPU",
+   "risk": "low"
+  },
+  {
+   "id": 260,
+   "name": "Disable NVIDIA Shadowplay Overlay",
+   "category": "GPU",
+   "risk": "low"
+  },
+  {
+   "id": 261,
+   "name": "Set NVIDIA Low Latency Mode to Ultra",
+   "category": "GPU",
+   "risk": "low"
+  },
+  {
+   "id": 262,
+   "name": "Disable NVIDIA Ansel",
+   "category": "GPU",
+   "risk": "low"
+  },
+  {
+   "id": 263,
+   "name": "Enable AMD Anti-Lag",
+   "category": "GPU",
+   "risk": "low"
+  },
+  {
+   "id": 264,
+   "name": "Disable AMD Radeon Overlay",
+   "category": "GPU",
+   "risk": "low"
+  },
+  {
+   "id": 265,
+   "name": "Set Shader Cache Size to Unlimited",
+   "category": "GPU",
+   "risk": "low"
+  },
+  {
+   "id": 266,
+   "name": "Disable Windows Update Auto Restart",
+   "category": "System",
+   "risk": "low"
+  },
+  {
+   "id": 267,
+   "name": "Disable Automatic Driver Updates",
+   "category": "System",
+   "risk": "medium"
+  },
+  {
+   "id": 268,
+   "name": "Set Windows Update to Notify Only",
+   "category": "System",
+   "risk": "medium"
+  },
+  {
+   "id": 269,
+   "name": "Disable Edge Prelaunch",
+   "category": "System",
+   "risk": "low"
+  },
+  {
+   "id": 270,
+   "name": "Disable Windows Defender Cloud Protection",
+   "category": "Security",
+   "risk": "high"
+  },
+  {
+   "id": 271,
+   "name": "Disable SmartScreen",
+   "category": "Security",
+   "risk": "high"
+  },
+  {
+   "id": 272,
+   "name": "Disable UAC Screen Dimming",
+   "category": "Security",
+   "risk": "low"
+  },
+  {
+   "id": 273,
+   "name": "Disable Windows Defender Sample Submission",
+   "category": "Security",
+   "risk": "low"
+  },
+  {
+   "id": 274,
+   "name": "Disable Firewall Logging",
+   "category": "Security",
+   "risk": "low"
+  },
+  {
+   "id": 275,
+   "name": "Remove 3D Viewer",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 276,
+   "name": "Remove Paint 3D",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 277,
+   "name": "Remove Mixed Reality Portal",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 278,
+   "name": "Remove Skype",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 279,
+   "name": "Remove Microsoft News",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 280,
+   "name": "Remove Weather",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 281,
+   "name": "Remove Maps",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 282,
+   "name": "Remove Get Help",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 283,
+   "name": "Remove Tips",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 284,
+   "name": "Remove Feedback Hub",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 285,
+   "name": "Remove Solitaire Collection",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 286,
+   "name": "Remove Sticky Notes",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 287,
+   "name": "Remove Voice Recorder",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 288,
+   "name": "Remove Groove Music",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 289,
+   "name": "Remove Movies & TV",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 290,
+   "name": "Remove Mail and Calendar",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 291,
+   "name": "Remove People",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 292,
+   "name": "Remove Phone Link",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 293,
+   "name": "Remove Microsoft 365 Hub",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 294,
+   "name": "Remove OneNote",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 295,
+   "name": "Remove Clipchamp",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 296,
+   "name": "Remove Microsoft Teams (Consumer)",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 297,
+   "name": "Remove Power Automate",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 298,
+   "name": "Remove Microsoft To Do",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 299,
+   "name": "Remove Bing Finance",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 300,
+   "name": "Remove Bing Sports",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 301,
+   "name": "Remove Bing Travel",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 302,
+   "name": "Remove Bing Food and Drink",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 303,
+   "name": "Remove Print 3D",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 304,
+   "name": "Remove Messaging",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 305,
+   "name": "Remove Candy Crush Preinstalled Games",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 306,
+   "name": "Remove Disney+ Preinstalled App",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 307,
+   "name": "Remove Netflix Preinstalled App",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 308,
+   "name": "Remove Spotify Preinstalled App",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 309,
+   "name": "Remove TikTok Preinstalled App",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 310,
+   "name": "Remove Instagram Preinstalled App",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 311,
+   "name": "Remove Facebook Preinstalled App",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 312,
+   "name": "Remove Twitter Preinstalled App",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 313,
+   "name": "Remove LinkedIn Preinstalled App",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 314,
+   "name": "Remove Amazon Prime Preinstalled App",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 315,
+   "name": "Remove Xbox Console Companion",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 316,
+   "name": "Remove Dev Home",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 317,
+   "name": "Remove Quick Assist",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 318,
+   "name": "Remove Microsoft Family",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 319,
+   "name": "Remove New Outlook",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 320,
+   "name": "Remove Copilot App",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 321,
+   "name": "Remove Cortana App",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 322,
+   "name": "Remove Windows Maps Broker",
+   "category": "Debloat",
+   "risk": "low"
+  },
+  {
+   "id": 323,
+   "name": "Disable Scheduled Task: Microsoft Compatibility Appraiser",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 324,
+   "name": "Disable Scheduled Task: ProgramDataUpdater",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 325,
+   "name": "Disable Scheduled Task: StartupAppTask",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 326,
+   "name": "Disable Scheduled Task: PcaPatchDbTask",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 327,
+   "name": "Disable Scheduled Task: Proxy Task",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 328,
+   "name": "Disable Scheduled Task: UsbCeip",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 329,
+   "name": "Disable Scheduled Task: KernelCeipTask",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 330,
+   "name": "Disable Scheduled Task: BthSQM",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 331,
+   "name": "Disable Scheduled Task: AitAgent",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 332,
+   "name": "Disable Scheduled Task: Disk Diagnostic Data Collector",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 333,
+   "name": "Disable Scheduled Task: Disk Diagnostic Resolver",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 334,
+   "name": "Disable Scheduled Task: Family Safety Monitor",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 335,
+   "name": "Disable Scheduled Task: Family Safety Refresh",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 336,
+   "name": "Disable Scheduled Task: Maps Toast Task",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 337,
+   "name": "Disable Scheduled Task: Maps Update Task",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 338,
+   "name": "Disable Scheduled Task: Xbox Game Save Task",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 339,
+   "name": "Disable Scheduled Task: Error Reporting Queue Task",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 340,
+   "name": "Disable Scheduled Task: SmartScreen Specific Task",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 341,
+   "name": "Disable Scheduled Task: WinSAT Task",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 342,
+   "name": "Disable Scheduled Task: Registry Idle Backup",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 343,
+   "name": "Disable Scheduled Task: Office Telemetry Agent Fallback",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 344,
+   "name": "Disable Scheduled Task: Office Telemetry Agent Logon",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 345,
+   "name": "Disable Scheduled Task: Edge Update Tasks",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 346,
+   "name": "Disable Scheduled Task: Google Update Tasks",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 347,
+   "name": "Disable Scheduled Task: Adobe Acrobat Update Task",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 348,
+   "name": "Disable Scheduled Task: NVIDIA Telemetry Reporting Task",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 349,
+   "name": "Disable Scheduled Task: NVIDIA Driver Update Check Task",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 350,
+   "name": "Disable Scheduled Task: Firefox Background Update Task",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 351,
+   "name": "Disable Scheduled Task: Dropbox Update Task",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 352,
+   "name": "Disable Scheduled Task: Windows Media Sharing Library Update",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 353,
+   "name": "Disable Scheduled Task: Speech Model Download Task",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 354,
+   "name": "Disable Scheduled Task: DmClient Task",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 355,
+   "name": "Disable Scheduled Task: DmClient Scenario Download Task",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 356,
+   "name": "Disable Scheduled Task: EduPrint Provisioning Task",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 357,
+   "name": "Disable Scheduled Task: Location Notification Task",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 358,
+   "name": "Disable Scheduled Task: Windows Hello Face Task",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 359,
+   "name": "Disable Scheduled Task: Work Folders Logon Sync Task",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 360,
+   "name": "Disable Scheduled Task: Wi-Fi Task",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 361,
+   "name": "Disable Scheduled Task: Cloud Experience Host Task",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 362,
+   "name": "Disable Scheduled Task: Sqm Tasks",
+   "category": "Scheduled Tasks",
+   "risk": "low"
+  },
+  {
+   "id": 363,
+   "name": "Disable Service: AllJoyn Router Service",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 364,
+   "name": "Disable Service: Auto Time Zone Updater",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 365,
+   "name": "Disable Service: BranchCache",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 366,
+   "name": "Disable Service: Cellular Time Service",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 367,
+   "name": "Disable Service: Certificate Propagation",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 368,
+   "name": "Disable Service: Data Usage Service",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 369,
+   "name": "Disable Service: Device Management Enrollment Service",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 370,
+   "name": "Disable Service: Diagnostic Execution Service",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 371,
+   "name": "Disable Service: Diagnostic Service Host",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 372,
+   "name": "Disable Service: Diagnostic System Host",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 373,
+   "name": "Disable Service: Embedded Mode Service",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 374,
+   "name": "Disable Service: Enterprise App Management Service",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 375,
+   "name": "Disable Service: File History Service",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 376,
+   "name": "Disable Service: Function Discovery Resource Publication",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 377,
+   "name": "Disable Service: Function Discovery Provider Host",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 378,
+   "name": "Disable Service: GameDVR and Broadcast User Service",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 379,
+   "name": "Disable Service: HomeGroup Provider",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 380,
+   "name": "Disable Service: Hyper-V Guest Service Interface",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 381,
+   "name": "Disable Service: Hyper-V Heartbeat Service",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 382,
+   "name": "Disable Service: Hyper-V Data Exchange Service",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 383,
+   "name": "Disable Service: Hyper-V Remote Desktop Virtualization Service",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 384,
+   "name": "Disable Service: Hyper-V Time Synchronization Service",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 385,
+   "name": "Disable Service: Hyper-V Volume Shadow Copy Requestor",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 386,
+   "name": "Disable Service: Internet Connection Sharing",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 387,
+   "name": "Disable Service: IP Helper",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 388,
+   "name": "Disable Service: IPsec Policy Agent",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 389,
+   "name": "Disable Service: Microsoft iSCSI Initiator Service",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 390,
+   "name": "Disable Service: Microsoft Windows SMS Router Service",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 391,
+   "name": "Disable Service: Natural Authentication Service",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 392,
+   "name": "Disable Service: Network Connected Devices Auto-Setup",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 393,
+   "name": "Disable Service: Peer Name Resolution Protocol",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 394,
+   "name": "Disable Service: Peer Networking Grouping",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 395,
+   "name": "Disable Service: Peer Networking Identity Manager",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 396,
+   "name": "Disable Service: PNRP Machine Name Publication",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 397,
+   "name": "Disable Service: Performance Counter DLL Host",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 398,
+   "name": "Disable Service: Performance Logs and Alerts",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 399,
+   "name": "Disable Service: Portable Device Enumerator Service",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 400,
+   "name": "Disable Service: Quality Windows Audio Video Experience",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 401,
+   "name": "Disable Service: Radio Management Service",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 402,
+   "name": "Disable Service: Remote Access Auto Connection Manager",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 403,
+   "name": "Disable Service: Remote Procedure Call Locator",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 404,
+   "name": "Disable Service: Routing and Remote Access",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 405,
+   "name": "Disable Service: Smart Card Device Enumeration Service",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 406,
+   "name": "Disable Service: Smart Card Removal Policy",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 407,
+   "name": "Disable Service: SNMP Trap",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 408,
+   "name": "Disable Service: SSDP Discovery",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 409,
+   "name": "Disable Service: Storage Tiers Management",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 410,
+   "name": "Disable Service: Telephony",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 411,
+   "name": "Disable Service: UPnP Device Host",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 412,
+   "name": "Disable Service: User Experience Virtualization Service",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 413,
+   "name": "Disable Service: Volumetric Audio Compositor Service",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 414,
+   "name": "Disable Service: WebClient",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 415,
+   "name": "Disable Service: Windows Camera Frame Server",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 416,
+   "name": "Disable Service: Windows Event Collector",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 417,
+   "name": "Disable Service: Windows Perception Service",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 418,
+   "name": "Disable Service: Windows Remote Management",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 419,
+   "name": "Disable Service: WMI Performance Adapter",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 420,
+   "name": "Disable Service: Work Folders",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 421,
+   "name": "Disable Service: WWAN AutoConfig",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 422,
+   "name": "Disable Service: Xbox Accessory Management Service",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 423,
+   "name": "Disable Service: Link-Layer Topology Discovery Mapper",
+   "category": "Services",
+   "risk": "medium"
+  },
+  {
+   "id": 424,
+   "name": "Disable Online Tips in Settings",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 425,
+   "name": "Disable Suggested Content in Settings",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 426,
+   "name": "Disable Start Menu Recommendations",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 427,
+   "name": "Hide Taskbar Chat Icon",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 428,
+   "name": "Hide Task View Button",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 429,
+   "name": "Hide Taskbar Search Box",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 430,
+   "name": "Hide Copilot Taskbar Button",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 431,
+   "name": "Align Taskbar to the Left",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 432,
+   "name": "Use Small Taskbar Icons",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 433,
+   "name": "Never Combine Taskbar Buttons",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 434,
+   "name": "Show Seconds in Taskbar Clock",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 435,
+   "name": "Disable Windows Ink Workspace",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 436,
+   "name": "Disable Touch Feedback Visuals",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 437,
+   "name": "Disable Pen Feedback Visuals",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 438,
+   "name": "Disable Windows Hello Sign-in Prompts",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 439,
+   "name": "Disable Use Sign-in Info to Finish Setup After Update",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 440,
+   "name": "Disable App Launch Tracking",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 441,
+   "name": "Disable Show Most Used Apps in Start",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 442,
+   "name": "Disable Show Recently Added Apps in Start",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 443,
+   "name": "Disable Recently Opened Items in Start",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 444,
+   "name": "Disable Windows Welcome Experience After Updates",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 445,
+   "name": "Disable First Logon Animation",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 446,
+   "name": "Disable Let's Finish Setting Up Your Device Nag",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 447,
+   "name": "Disable Windows Backup Nag",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 448,
+   "name": "Disable OneDrive Backup Nag",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 449,
+   "name": "Disable Account Protection Notifications",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 450,
+   "name": "Disable Security Center Notifications",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 451,
+   "name": "Disable Maintenance Notifications",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 452,
+   "name": "Disable Reliability Monitor Data Collection",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 453,
+   "name": "Show This PC Icon on Desktop",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 454,
+   "name": "Show Recycle Bin Icon on Desktop",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 455,
+   "name": "Show Network Icon on Desktop",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 456,
+   "name": "Show User Files Icon on Desktop",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 457,
+   "name": "Enable End Task in Taskbar Context Menu",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 458,
+   "name": "Enable Win32 Long Paths",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 459,
+   "name": "Enable Verbose Logon Messages",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 460,
+   "name": "Enable NumLock at Boot",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 461,
+   "name": "Disable Notification Toasts on Lock Screen",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 462,
+   "name": "Disable Taskbar Badges",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 463,
+   "name": "Disable Taskbar Flashing",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 464,
+   "name": "Disable Search Highlights",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 465,
+   "name": "Disable Weather on Taskbar",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 466,
+   "name": "Disable Snap Layouts on Hover",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 467,
+   "name": "Disable Windows Ink Suggestions",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 468,
+   "name": "Disable Start Menu Web Results Suggestions",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 469,
+   "name": "Hide Recommended Section in Start",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 470,
+   "name": "Disable Taskbar Thumbnail Delay",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 471,
+   "name": "Set Taskbar Thumbnail Delay to Zero",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 472,
+   "name": "Disable Cursor Blink",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 473,
+   "name": "Disable Window Border Animations",
+   "category": "UI",
+   "risk": "low"
+  },
+  {
+   "id": 474,
+   "name": "Remove Share from Context Menu",
+   "category": "Context Menu",
+   "risk": "low"
+  },
+  {
+   "id": 475,
+   "name": "Remove Give Access To from Context Menu",
+   "category": "Context Menu",
+   "risk": "low"
+  },
+  {
+   "id": 476,
+   "name": "Remove Include in Library from Context Menu",
+   "category": "Context Menu",
+   "risk": "low"
+  },
+  {
+   "id": 477,
+   "name": "Remove Restore Previous Versions from Context Menu",
+   "category": "Context Menu",
+   "risk": "low"
+  },
+  {
+   "id": 478,
+   "name": "Remove Send To Bluetooth from Context Menu",
+   "category": "Context Menu",
+   "risk": "low"
+  },
+  {
+   "id": 479,
+   "name": "Remove Edit with Paint 3D from Context Menu",
+   "category": "Context Menu",
+   "risk": "low"
+  },
+  {
+   "id": 480,
+   "name": "Remove Cast to Device from Context Menu",
+   "category": "Context Menu",
+   "risk": "low"
+  },
+  {
+   "id": 481,
+   "name": "Remove Print from Image Context Menu",
+   "category": "Context Menu",
+   "risk": "low"
+  },
+  {
+   "id": 482,
+   "name": "Remove Troubleshoot Compatibility from Context Menu",
+   "category": "Context Menu",
+   "risk": "low"
+  },
+  {
+   "id": 483,
+   "name": "Remove Pin to Quick Access from Context Menu",
+   "category": "Context Menu",
+   "risk": "low"
+  },
+  {
+   "id": 484,
+   "name": "Remove Customize This Folder from Context Menu",
+   "category": "Context Menu",
+   "risk": "low"
+  },
+  {
+   "id": 485,
+   "name": "Remove Edit with Photos from Context Menu",
+   "category": "Context Menu",
+   "risk": "low"
+  },
+  {
+   "id": 486,
+   "name": "Remove Open in Terminal from Context Menu",
+   "category": "Context Menu",
+   "risk": "low"
+  },
+  {
+   "id": 487,
+   "name": "Remove Add to Favorites from Context Menu",
+   "category": "Context Menu",
+   "risk": "low"
+  },
+  {
+   "id": 488,
+   "name": "Add Take Ownership to Context Menu",
+   "category": "Context Menu",
+   "risk": "low"
+  },
+  {
+   "id": 489,
+   "name": "Add Copy as Path to Context Menu",
+   "category": "Context Menu",
+   "risk": "low"
+  },
+  {
+   "id": 490,
+   "name": "Add Open Command Prompt Here to Context Menu",
+   "category": "Context Menu",
+   "risk": "low"
+  },
+  {
+   "id": 491,
+   "name": "Add Restart Explorer to Context Menu",
+   "category": "Context Menu",
+   "risk": "low"
+  },
+  {
+   "id": 492,
+   "name": "Add Kill Not Responding Tasks to Context Menu",
+   "category": "Context Menu",
+   "risk": "low"
+  },
+  {
+   "id": 493,
+   "name": "Add Open PowerShell Here to Context Menu",
+   "category": "Context Menu",
+   "risk": "low"
+  },
+  {
+   "id": 494,
+   "name": "Add Copy to Folder and Move to Folder to Context Menu",
+   "category": "Context Menu",
+   "risk": "low"
+  },
+  {
+   "id": 495,
+   "name": "Add Run as Administrator to Scripts Context Menu",
+   "category": "Context Menu",
+   "risk": "low"
+  },
+  {
+   "id": 496,
+   "name": "Disable Chrome Metrics Reporting",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 497,
+   "name": "Disable Chrome Background Mode",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 498,
+   "name": "Disable Chrome Sign-in",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 499,
+   "name": "Disable Chrome Translate Prompts",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 500,
+   "name": "Disable Chrome Sync",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 501,
+   "name": "Disable Chrome Address Autofill",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 502,
+   "name": "Disable Chrome Shopping Features",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 503,
+   "name": "Disable Chrome Promotional Notifications",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 504,
+   "name": "Disable Chrome Safe Browsing Extended Reporting",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 505,
+   "name": "Enable Chrome Hardware Acceleration",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 506,
+   "name": "Disable Edge Sidebar",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 507,
+   "name": "Disable Edge Shopping Assistant",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 508,
+   "name": "Disable Edge Collections",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 509,
+   "name": "Disable Edge Copilot Integration",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 510,
+   "name": "Disable Edge Spotlight Experiences",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 511,
+   "name": "Disable Edge Personalization Reporting",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 512,
+   "name": "Disable Edge Search Suggestions",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 513,
+   "name": "Disable Edge Sync",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 514,
+   "name": "Disable Edge Feedback Button",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 515,
+   "name": "Disable Edge Rewards",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 516,
+   "name": "Disable Edge First Run Experience",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 517,
+   "name": "Disable Edge Desktop Search Bar",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 518,
+   "name": "Disable Firefox Telemetry",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 519,
+   "name": "Disable Firefox Studies",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 520,
+   "name": "Disable Firefox Pocket",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 521,
+   "name": "Disable Firefox Crash Reporter",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 522,
+   "name": "Disable Firefox Health Report",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 523,
+   "name": "Disable Firefox Background Updates",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 524,
+   "name": "Disable Brave Rewards",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 525,
+   "name": "Disable Brave Wallet",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 526,
+   "name": "Disable Brave News",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 527,
+   "name": "Disable Brave VPN Promotion",
+   "category": "Browser",
+   "risk": "low"
+  },
+  {
+   "id": 528,
+   "name": "Set Counter-Strike 2 CPU Priority to High",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 529,
+   "name": "Set Valorant CPU Priority to High",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 530,
+   "name": "Set Fortnite CPU Priority to High",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 531,
+   "name": "Set Apex Legends CPU Priority to High",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 532,
+   "name": "Set Call of Duty Warzone CPU Priority to High",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 533,
+   "name": "Set Overwatch 2 CPU Priority to High",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 534,
+   "name": "Set League of Legends CPU Priority to High",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 535,
+   "name": "Set Dota 2 CPU Priority to High",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 536,
+   "name": "Set Rocket League CPU Priority to High",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 537,
+   "name": "Set Roblox CPU Priority to High",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 538,
+   "name": "Set Minecraft CPU Priority to High",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 539,
+   "name": "Set Grand Theft Auto V CPU Priority to High",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 540,
+   "name": "Set Rainbow Six Siege CPU Priority to High",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 541,
+   "name": "Set PUBG CPU Priority to High",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 542,
+   "name": "Set Rust CPU Priority to High",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 543,
+   "name": "Set Escape from Tarkov CPU Priority to High",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 544,
+   "name": "Set Marvel Rivals CPU Priority to High",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 545,
+   "name": "Set Destiny 2 CPU Priority to High",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 546,
+   "name": "Set Elden Ring CPU Priority to High",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 547,
+   "name": "Set Cyberpunk 2077 CPU Priority to High",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 548,
+   "name": "Set Genshin Impact CPU Priority to High",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 549,
+   "name": "Set Team Fortress 2 CPU Priority to High",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 550,
+   "name": "Set Battlefield 2042 CPU Priority to High",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 551,
+   "name": "Set The Finals CPU Priority to High",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 552,
+   "name": "Set Deadlock CPU Priority to High",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 553,
+   "name": "Disable Fullscreen Optimizations for Counter-Strike 2",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 554,
+   "name": "Disable Fullscreen Optimizations for Valorant",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 555,
+   "name": "Disable Fullscreen Optimizations for Fortnite",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 556,
+   "name": "Disable Fullscreen Optimizations for Apex Legends",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 557,
+   "name": "Disable Fullscreen Optimizations for Call of Duty Warzone",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 558,
+   "name": "Disable Fullscreen Optimizations for Overwatch 2",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 559,
+   "name": "Disable Fullscreen Optimizations for League of Legends",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 560,
+   "name": "Disable Fullscreen Optimizations for Dota 2",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 561,
+   "name": "Disable Fullscreen Optimizations for Rocket League",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 562,
+   "name": "Disable Fullscreen Optimizations for Roblox",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 563,
+   "name": "Disable Fullscreen Optimizations for Minecraft",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 564,
+   "name": "Disable Fullscreen Optimizations for Grand Theft Auto V",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 565,
+   "name": "Disable Fullscreen Optimizations for Rainbow Six Siege",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 566,
+   "name": "Disable Fullscreen Optimizations for PUBG",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 567,
+   "name": "Disable Fullscreen Optimizations for Rust",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 568,
+   "name": "Disable Fullscreen Optimizations for Escape from Tarkov",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 569,
+   "name": "Disable Fullscreen Optimizations for Marvel Rivals",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 570,
+   "name": "Disable Fullscreen Optimizations for Destiny 2",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 571,
+   "name": "Disable Fullscreen Optimizations for Elden Ring",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 572,
+   "name": "Disable Fullscreen Optimizations for Cyberpunk 2077",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 573,
+   "name": "Disable Fullscreen Optimizations for Genshin Impact",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 574,
+   "name": "Disable Fullscreen Optimizations for Team Fortress 2",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 575,
+   "name": "Disable Fullscreen Optimizations for Battlefield 2042",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 576,
+   "name": "Disable Fullscreen Optimizations for The Finals",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 577,
+   "name": "Disable Fullscreen Optimizations for Deadlock",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 578,
+   "name": "Set Counter-Strike 2 GPU Preference to High Performance",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 579,
+   "name": "Set Valorant GPU Preference to High Performance",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 580,
+   "name": "Set Fortnite GPU Preference to High Performance",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 581,
+   "name": "Set Apex Legends GPU Preference to High Performance",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 582,
+   "name": "Set Call of Duty Warzone GPU Preference to High Performance",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 583,
+   "name": "Set Overwatch 2 GPU Preference to High Performance",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 584,
+   "name": "Set League of Legends GPU Preference to High Performance",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 585,
+   "name": "Set Dota 2 GPU Preference to High Performance",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 586,
+   "name": "Set Rocket League GPU Preference to High Performance",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 587,
+   "name": "Set Roblox GPU Preference to High Performance",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 588,
+   "name": "Set Minecraft GPU Preference to High Performance",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 589,
+   "name": "Set Grand Theft Auto V GPU Preference to High Performance",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 590,
+   "name": "Set Rainbow Six Siege GPU Preference to High Performance",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 591,
+   "name": "Set PUBG GPU Preference to High Performance",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 592,
+   "name": "Set Rust GPU Preference to High Performance",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 593,
+   "name": "Set Escape from Tarkov GPU Preference to High Performance",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 594,
+   "name": "Set Marvel Rivals GPU Preference to High Performance",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 595,
+   "name": "Set Destiny 2 GPU Preference to High Performance",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 596,
+   "name": "Set Elden Ring GPU Preference to High Performance",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 597,
+   "name": "Set Cyberpunk 2077 GPU Preference to High Performance",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 598,
+   "name": "Set Genshin Impact GPU Preference to High Performance",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 599,
+   "name": "Set Team Fortress 2 GPU Preference to High Performance",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 600,
+   "name": "Set Battlefield 2042 GPU Preference to High Performance",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 601,
+   "name": "Set The Finals GPU Preference to High Performance",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 602,
+   "name": "Set Deadlock GPU Preference to High Performance",
+   "category": "Game Profiles",
+   "risk": "low"
+  },
+  {
+   "id": 603,
+   "name": "Disable Steam Overlay Startup Delay",
+   "category": "Launchers",
+   "risk": "low"
+  },
+  {
+   "id": 604,
+   "name": "Disable Steam Big Picture on Startup",
+   "category": "Launchers",
+   "risk": "low"
+  },
+  {
+   "id": 605,
+   "name": "Disable Steam Auto-Start",
+   "category": "Launchers",
+   "risk": "low"
+  },
+  {
+   "id": 606,
+   "name": "Disable Steam Web Browser Hardware Acceleration",
+   "category": "Launchers",
+   "risk": "low"
+  },
+  {
+   "id": 607,
+   "name": "Disable Discord Auto-Start",
+   "category": "Launchers",
+   "risk": "low"
+  },
+  {
+   "id": 608,
+   "name": "Disable Discord Hardware Acceleration",
+   "category": "Launchers",
+   "risk": "low"
+  },
+  {
+   "id": 609,
+   "name": "Disable Discord Overlay",
+   "category": "Launchers",
+   "risk": "low"
+  },
+  {
+   "id": 610,
+   "name": "Disable Epic Games Launcher Auto-Start",
+   "category": "Launchers",
+   "risk": "low"
+  },
+  {
+   "id": 611,
+   "name": "Disable Epic Games Launcher Background Updates",
+   "category": "Launchers",
+   "risk": "low"
+  },
+  {
+   "id": 612,
+   "name": "Disable Battle.net Auto-Start",
+   "category": "Launchers",
+   "risk": "low"
+  },
+  {
+   "id": 613,
+   "name": "Disable EA App Auto-Start",
+   "category": "Launchers",
+   "risk": "low"
+  },
+  {
+   "id": 614,
+   "name": "Disable EA App In-Game Overlay",
+   "category": "Launchers",
+   "risk": "low"
+  },
+  {
+   "id": 615,
+   "name": "Disable Ubisoft Connect Overlay",
+   "category": "Launchers",
+   "risk": "low"
+  },
+  {
+   "id": 616,
+   "name": "Disable Ubisoft Connect Auto-Start",
+   "category": "Launchers",
+   "risk": "low"
+  },
+  {
+   "id": 617,
+   "name": "Disable GOG Galaxy Overlay",
+   "category": "Launchers",
+   "risk": "low"
+  },
+  {
+   "id": 618,
+   "name": "Disable GOG Galaxy Auto-Start",
+   "category": "Launchers",
+   "risk": "low"
+  },
+  {
+   "id": 619,
+   "name": "Disable Razer Synapse Telemetry",
+   "category": "Launchers",
+   "risk": "low"
+  },
+  {
+   "id": 620,
+   "name": "Disable Logitech G Hub Auto-Start",
+   "category": "Launchers",
+   "risk": "low"
+  },
+  {
+   "id": 621,
+   "name": "Disable Overwolf Auto-Start",
+   "category": "Launchers",
+   "risk": "low"
+  },
+  {
+   "id": 622,
+   "name": "Disable Spotify Auto-Start",
+   "category": "Launchers",
+   "risk": "low"
+  },
+  {
+   "id": 623,
+   "name": "Disable Microsoft Teams Auto-Start",
+   "category": "Launchers",
+   "risk": "low"
+  },
+  {
+   "id": 624,
+   "name": "Disable Adobe Creative Cloud Auto-Start",
+   "category": "Launchers",
+   "risk": "low"
+  },
+  {
+   "id": 625,
+   "name": "Disable Wake on Magic Packet",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 626,
+   "name": "Disable Wake on Pattern Match",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 627,
+   "name": "Disable Jumbo Frame",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 628,
+   "name": "Set NIC Receive Buffers to Maximum",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 629,
+   "name": "Set NIC Transmit Buffers to Maximum",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 630,
+   "name": "Disable IPv4 Checksum Offload",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 631,
+   "name": "Disable TCP Checksum Offload",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 632,
+   "name": "Disable UDP Checksum Offload",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 633,
+   "name": "Disable ARP Offload",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 634,
+   "name": "Disable NS Offload",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 635,
+   "name": "Disable NIC Priority and VLAN Tagging",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 636,
+   "name": "Disable Packet Coalescing",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 637,
+   "name": "Disable Gigabit Lite",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 638,
+   "name": "Disable Advanced EEE",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 639,
+   "name": "Disable NIC Power Saving Mode",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 640,
+   "name": "Disable Reduce Speed on Power Down",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 641,
+   "name": "Disable Ultra Low Power Mode",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 642,
+   "name": "Set Wi-Fi Roaming Aggressiveness to Lowest",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 643,
+   "name": "Disable Wi-Fi MIMO Power Save",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 644,
+   "name": "Disable Wi-Fi U-APSD",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 645,
+   "name": "Disable TCP ECN Capability",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 646,
+   "name": "Disable TCP Timestamps",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 647,
+   "name": "Set TCP Congestion Provider to CTCP",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 648,
+   "name": "Set TCP Congestion Provider to BBR2",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 649,
+   "name": "Lower TCP Initial RTO",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 650,
+   "name": "Reduce TCP Time Wait Delay",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 651,
+   "name": "Increase Max User Ports",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 652,
+   "name": "Set DNS to Quad9",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 653,
+   "name": "Set DNS to OpenDNS",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 654,
+   "name": "Set DNS to AdGuard DNS",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 655,
+   "name": "Set DNS to Cloudflare IPv6",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 656,
+   "name": "Set DNS to Google IPv6",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 657,
+   "name": "Enable DNS over HTTPS for Quad9",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 658,
+   "name": "Increase DNS Negative Cache Lifetime",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 659,
+   "name": "Lower Network Adapter Metric for Ethernet",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 660,
+   "name": "Disable Network Discovery",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 661,
+   "name": "Disable File and Printer Sharing",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 662,
+   "name": "Set Connected Networks to Private",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 663,
+   "name": "Disable Proxy Auto-Detect",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 664,
+   "name": "Disable WPAD",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 665,
+   "name": "Disable mDNS",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 666,
+   "name": "Disable Smart Multi-Homed Name Resolution",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 667,
+   "name": "Disable Network Connectivity Status Indicator Probing",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 668,
+   "name": "Disable Windows Update Peer-to-Peer Sharing",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 669,
+   "name": "Disable Wi-Fi Network Suggestions",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 670,
+   "name": "Disable Randomized Hardware Addresses",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 671,
+   "name": "Increase Socket Send Buffer Size",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 672,
+   "name": "Increase Socket Receive Buffer Size",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 673,
+   "name": "Enable UDP Send Optimization",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 674,
+   "name": "Set Local Priority for Gaming Traffic",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 675,
+   "name": "Set Host Priority for Gaming Traffic",
+   "category": "Network",
+   "risk": "low"
+  },
+  {
+   "id": 676,
+   "name": "Disable Large System Cache",
+   "category": "CPU & Memory",
+   "risk": "medium"
+  },
+  {
+   "id": 677,
+   "name": "Set Win32 Priority Separation to Short Fixed Foreground",
+   "category": "CPU & Memory",
+   "risk": "medium"
+  },
+  {
+   "id": 678,
+   "name": "Set Fixed Page File Size",
+   "category": "CPU & Memory",
+   "risk": "medium"
+  },
+  {
+   "id": 679,
+   "name": "Clear Page File at Shutdown Off",
+   "category": "CPU & Memory",
+   "risk": "medium"
+  },
+  {
+   "id": 680,
+   "name": "Disable Boot Optimize Function",
+   "category": "CPU & Memory",
+   "risk": "medium"
+  },
+  {
+   "id": 681,
+   "name": "Disable Fault Tolerant Heap",
+   "category": "CPU & Memory",
+   "risk": "medium"
+  },
+  {
+   "id": 682,
+   "name": "Reduce Wait to Kill Service Timeout",
+   "category": "CPU & Memory",
+   "risk": "medium"
+  },
+  {
+   "id": 683,
+   "name": "Reduce Wait to Kill App Timeout",
+   "category": "CPU & Memory",
+   "risk": "medium"
+  },
+  {
+   "id": 684,
+   "name": "Reduce Low Level Hooks Timeout",
+   "category": "CPU & Memory",
+   "risk": "medium"
+  },
+  {
+   "id": 685,
+   "name": "Disable Automatic Maintenance",
+   "category": "CPU & Memory",
+   "risk": "medium"
+  },
+  {
+   "id": 686,
+   "name": "Disable Defender Scheduled Scan",
+   "category": "CPU & Memory",
+   "risk": "medium"
+  },
+  {
+   "id": 687,
+   "name": "Limit Defender Scan CPU Load to 10 Percent",
+   "category": "CPU & Memory",
+   "risk": "medium"
+  },
+  {
+   "id": 688,
+   "name": "Set Core Parking Minimum Cores to 100 Percent",
+   "category": "CPU & Memory",
+   "risk": "medium"
+  },
+  {
+   "id": 689,
+   "name": "Disable Processor Idle Promote",
+   "category": "CPU & Memory",
+   "risk": "medium"
+  },
+  {
+   "id": 690,
+   "name": "Disable Processor Idle Demote",
+   "category": "CPU & Memory",
+   "risk": "medium"
+  },
+  {
+   "id": 691,
+   "name": "Set Energy Performance Preference to Performance",
+   "category": "CPU & Memory",
+   "risk": "medium"
+  },
+  {
+   "id": 692,
+   "name": "Set System Cooling Policy to Active",
+   "category": "CPU & Memory",
+   "risk": "medium"
+  },
+  {
+   "id": 693,
+   "name": "Set Heterogeneous Thread Scheduling to Performance Cores",
+   "category": "CPU & Memory",
+   "risk": "medium"
+  },
+  {
+   "id": 694,
+   "name": "Set Maximum Processor State to 100 Percent",
+   "category": "CPU & Memory",
+   "risk": "medium"
+  },
+  {
+   "id": 695,
+   "name": "Disable Windows Memory Diagnostic Scheduling",
+   "category": "CPU & Memory",
+   "risk": "medium"
+  },
+  {
+   "id": 696,
+   "name": "Increase Paged Pool Memory Limit",
+   "category": "CPU & Memory",
+   "risk": "medium"
+  },
+  {
+   "id": 697,
+   "name": "Increase Desktop Heap Size",
+   "category": "CPU & Memory",
+   "risk": "medium"
+  },
+  {
+   "id": 698,
+   "name": "Increase IRPStackSize",
+   "category": "CPU & Memory",
+   "risk": "medium"
+  },
+  {
+   "id": 699,
+   "name": "Disable Prefetch for Boot",
+   "category": "CPU & Memory",
+   "risk": "medium"
+  },
+  {
+   "id": 700,
+   "name": "Optimize Standby List Behavior",
+   "category": "CPU & Memory",
+   "risk": "medium"
+  },
+  {
+   "id": 701,
+   "name": "Disable Write Cache Buffer Flushing",
+   "category": "Storage",
+   "risk": "high"
+  },
+  {
+   "id": 702,
+   "name": "Enable Write Caching on Disks",
+   "category": "Storage",
+   "risk": "medium"
+  },
+  {
+   "id": 703,
+   "name": "Disable Hybrid Sleep",
+   "category": "Storage",
+   "risk": "medium"
+  },
+  {
+   "id": 704,
+   "name": "Disable Volume Shadow Copy",
+   "category": "Storage",
+   "risk": "high"
+  },
+  {
+   "id": 705,
+   "name": "Disable System Restore",
+   "category": "Storage",
+   "risk": "high"
+  },
+  {
+   "id": 706,
+   "name": "Limit System Restore Disk Usage",
+   "category": "Storage",
+   "risk": "medium"
+  },
+  {
+   "id": 707,
+   "name": "Disable NTFS Compression",
+   "category": "Storage",
+   "risk": "medium"
+  },
+  {
+   "id": 708,
+   "name": "Disable NTFS Encryption",
+   "category": "Storage",
+   "risk": "medium"
+  },
+  {
+   "id": 709,
+   "name": "Disable Windows Reserved Storage",
+   "category": "Storage",
+   "risk": "medium"
+  },
+  {
+   "id": 710,
+   "name": "Compact OS Compression",
+   "category": "Storage",
+   "risk": "medium"
+  },
+  {
+   "id": 711,
+   "name": "Disable Hibernate File Size",
+   "category": "Storage",
+   "risk": "medium"
+  },
+  {
+   "id": 712,
+   "name": "Disable Disk Defragmentation Service",
+   "category": "Storage",
+   "risk": "medium"
+  },
+  {
+   "id": 713,
+   "name": "Disable Storage Health Monitoring",
+   "category": "Storage",
+   "risk": "medium"
+  },
+  {
+   "id": 714,
+   "name": "Disable Thumbs.db Creation on Network Folders",
+   "category": "Storage",
+   "risk": "medium"
+  },
+  {
+   "id": 715,
+   "name": "Disable File Indexing on All Drives",
+   "category": "Storage",
+   "risk": "medium"
+  },
+  {
+   "id": 716,
+   "name": "Disable Windows Search Content Indexing",
+   "category": "Storage",
+   "risk": "medium"
+  },
+  {
+   "id": 717,
+   "name": "Clear Chrome Cache",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 718,
+   "name": "Clear Edge Cache",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 719,
+   "name": "Clear Firefox Cache",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 720,
+   "name": "Clear Steam Shader Cache",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 721,
+   "name": "Clear NVIDIA DirectX Cache",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 722,
+   "name": "Clear AMD DirectX Cache",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 723,
+   "name": "Clear Discord Cache",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 724,
+   "name": "Clear Spotify Cache",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 725,
+   "name": "Clear Teams Cache",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 726,
+   "name": "Clear Office Cache",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 727,
+   "name": "Clear Microsoft Store Cache",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 728,
+   "name": "Clear Icon Cache",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 729,
+   "name": "Clear Font Cache",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 730,
+   "name": "Clear Recent Files List",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 731,
+   "name": "Clear Run Dialog History",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 732,
+   "name": "Clear Clipboard Data",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 733,
+   "name": "Clear CBS Logs",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 734,
+   "name": "Clear Memory Dump Files",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 735,
+   "name": "Clear Minidump Files",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 736,
+   "name": "Clear Setup Log Files",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 737,
+   "name": "Clear Print Spooler Queue",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 738,
+   "name": "Clear Crash Dump Files",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 739,
+   "name": "Clear Jump Lists",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 740,
+   "name": "Clear Defender Quarantine History",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 741,
+   "name": "Clear Package Cache",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 742,
+   "name": "Clear Installer Patch Cache",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 743,
+   "name": "Clear Windows Temp Folder",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 744,
+   "name": "Clear User Temp Folder",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 745,
+   "name": "Clear Windows Logs Folder",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 746,
+   "name": "Clear Roblox Logs and Cache",
+   "category": "Cleanup",
+   "risk": "low"
+  },
+  {
+   "id": 747,
+   "name": "Defer Feature Updates for 365 Days",
+   "category": "Updates",
+   "risk": "medium"
+  },
+  {
+   "id": 748,
+   "name": "Defer Quality Updates for 30 Days",
+   "category": "Updates",
+   "risk": "medium"
+  },
+  {
+   "id": 749,
+   "name": "Disable Microsoft Store Auto Updates",
+   "category": "Updates",
+   "risk": "medium"
+  },
+  {
+   "id": 750,
+   "name": "Disable Windows Update Medic Service",
+   "category": "Updates",
+   "risk": "medium"
+  },
+  {
+   "id": 751,
+   "name": "Disable Update Orchestrator Service",
+   "category": "Updates",
+   "risk": "medium"
+  },
+  {
+   "id": 752,
+   "name": "Disable Malicious Software Removal Tool Updates",
+   "category": "Updates",
+   "risk": "medium"
+  },
+  {
+   "id": 753,
+   "name": "Disable Windows Update Notifications",
+   "category": "Updates",
+   "risk": "medium"
+  },
+  {
+   "id": 754,
+   "name": "Disable Auto Download of Optional Updates",
+   "category": "Updates",
+   "risk": "medium"
+  },
+  {
+   "id": 755,
+   "name": "Disable Feature Update Upgrade Prompts",
+   "category": "Updates",
+   "risk": "medium"
+  },
+  {
+   "id": 756,
+   "name": "Disable Windows 11 Upgrade Nag",
+   "category": "Updates",
+   "risk": "medium"
+  },
+  {
+   "id": 757,
+   "name": "Disable Store Preinstalled App Updates",
+   "category": "Updates",
+   "risk": "medium"
+  },
+  {
+   "id": 758,
+   "name": "Disable Driver Searching in Windows Update",
+   "category": "Updates",
+   "risk": "medium"
+  },
+  {
+   "id": 759,
+   "name": "Enable Data Execution Prevention",
+   "category": "Security",
+   "risk": "low"
+  },
+  {
+   "id": 760,
+   "name": "Disable NTLMv1",
+   "category": "Security",
+   "risk": "high"
+  },
+  {
+   "id": 761,
+   "name": "Disable LM Hash Storage",
+   "category": "Security",
+   "risk": "low"
+  },
+  {
+   "id": 762,
+   "name": "Disable WDigest Authentication",
+   "category": "Security",
+   "risk": "low"
+  },
+  {
+   "id": 763,
+   "name": "Disable Anonymous SID Enumeration",
+   "category": "Security",
+   "risk": "low"
+  },
+  {
+   "id": 764,
+   "name": "Disable Windows Script Host",
+   "category": "Security",
+   "risk": "high"
+  },
+  {
+   "id": 765,
+   "name": "Disable PowerShell v2",
+   "category": "Security",
+   "risk": "low"
+  },
+  {
+   "id": 766,
+   "name": "Enable Windows Firewall for All Profiles",
+   "category": "Security",
+   "risk": "low"
+  },
+  {
+   "id": 767,
+   "name": "Disable Remote Shell Access",
+   "category": "Security",
+   "risk": "low"
+  },
+  {
+   "id": 768,
+   "name": "Disable Autorun for Removable Drives",
+   "category": "Security",
+   "risk": "low"
+  },
+  {
+   "id": 769,
+   "name": "Block Office Macros from the Internet",
+   "category": "Security",
+   "risk": "low"
+  },
+  {
+   "id": 770,
+   "name": "Disable Remote Assistance Offers",
+   "category": "Security",
+   "risk": "low"
+  },
+  {
+   "id": 771,
+   "name": "Enable Controlled Folder Access",
+   "category": "Security",
+   "risk": "low"
+  },
+  {
+   "id": 772,
+   "name": "Enable Attack Surface Reduction Rules",
+   "category": "Security",
+   "risk": "low"
+  },
+  {
+   "id": 773,
+   "name": "Disable SMB Compression",
+   "category": "Security",
+   "risk": "low"
+  },
+  {
+   "id": 774,
+   "name": "Disable Admin Shares",
+   "category": "Security",
+   "risk": "high"
+  },
+  {
+   "id": 775,
+   "name": "Disable Insecure Guest Logons",
+   "category": "Security",
+   "risk": "low"
+  },
+  {
+   "id": 776,
+   "name": "Disable Cached Domain Logons",
+   "category": "Security",
+   "risk": "high"
+  },
+  {
+   "id": 777,
+   "name": "Enable Audit Process Creation",
+   "category": "Security",
+   "risk": "low"
+  },
+  {
+   "id": 778,
+   "name": "Disable Bluetooth Discoverability",
+   "category": "Security",
+   "risk": "low"
+  },
+  {
+   "id": 779,
+   "name": "Disable Windows Remote Management Listeners",
+   "category": "Security",
+   "risk": "low"
+  },
+  {
+   "id": 780,
+   "name": "Enable Local Security Authority Protection",
+   "category": "Security",
+   "risk": "low"
+  },
+  {
+   "id": 781,
+   "name": "Disable Audio Enhancements",
+   "category": "Audio",
+   "risk": "low"
+  },
+  {
+   "id": 782,
+   "name": "Disable Spatial Sound",
+   "category": "Audio",
+   "risk": "low"
+  },
+  {
+   "id": 783,
+   "name": "Disable Audio Ducking",
+   "category": "Audio",
+   "risk": "low"
+  },
+  {
+   "id": 784,
+   "name": "Disable Exclusive Mode Priority Override",
+   "category": "Audio",
+   "risk": "low"
+  },
+  {
+   "id": 785,
+   "name": "Set Audio Sample Rate to 48000 Hz",
+   "category": "Audio",
+   "risk": "low"
+  },
+  {
+   "id": 786,
+   "name": "Set Audio Bit Depth to 24-bit",
+   "category": "Audio",
+   "risk": "low"
+  },
+  {
+   "id": 787,
+   "name": "Disable Microphone Auto Gain Control",
+   "category": "Audio",
+   "risk": "low"
+  },
+  {
+   "id": 788,
+   "name": "Disable Audio Device Power Saving",
+   "category": "Audio",
+   "risk": "low"
+  },
+  {
+   "id": 789,
+   "name": "Disable Sound Communications Activity Ducking",
+   "category": "Audio",
+   "risk": "low"
+  },
+  {
+   "id": 790,
+   "name": "Disable Windows Sonic",
+   "category": "Audio",
+   "risk": "low"
+  },
+  {
+   "id": 791,
+   "name": "Disable HDMI Audio Auto Switching",
+   "category": "Audio",
+   "risk": "low"
+  },
+  {
+   "id": 792,
+   "name": "Disable Audio Service Idle Timeout",
+   "category": "Audio",
+   "risk": "low"
+  },
+  {
+   "id": 793,
+   "name": "Set Mouse Sensitivity to Default 6/11",
+   "category": "Input",
+   "risk": "low"
+  },
+  {
+   "id": 794,
+   "name": "Disable Mouse Snap to Default Button",
+   "category": "Input",
+   "risk": "low"
+  },
+  {
+   "id": 795,
+   "name": "Disable Mouse Trails",
+   "category": "Input",
+   "risk": "low"
+  },
+  {
+   "id": 796,
+   "name": "Disable Mouse Pointer Shadows",
+   "category": "Input",
+   "risk": "low"
+  },
+  {
+   "id": 797,
+   "name": "Disable Mouse Hover Time Delays",
+   "category": "Input",
+   "risk": "low"
+  },
+  {
+   "id": 798,
+   "name": "Disable Touchpad Tap Delay",
+   "category": "Input",
+   "risk": "low"
+  },
+  {
+   "id": 799,
+   "name": "Disable Touchpad Three-Finger Gestures",
+   "category": "Input",
+   "risk": "low"
+  },
+  {
+   "id": 800,
+   "name": "Reduce Mouse Wheel Smooth Scrolling",
+   "category": "Input",
+   "risk": "low"
+  },
+  {
+   "id": 801,
+   "name": "Set Keyboard Layout Switching Hotkey Off",
+   "category": "Input",
+   "risk": "low"
+  },
+  {
+   "id": 802,
+   "name": "Disable Language Bar Hotkeys",
+   "category": "Input",
+   "risk": "low"
+  },
+  {
+   "id": 803,
+   "name": "Disable Windows Key Hotkeys in Games",
+   "category": "Input",
+   "risk": "low"
+  },
+  {
+   "id": 804,
+   "name": "Disable Gamepad Navigation Shortcuts",
+   "category": "Input",
+   "risk": "low"
+  },
+  {
+   "id": 805,
+   "name": "Disable Xbox Controller Wake",
+   "category": "Input",
+   "risk": "low"
+  },
+  {
+   "id": 806,
+   "name": "Disable Pointer Ballistics Curve",
+   "category": "Input",
+   "risk": "low"
+  },
+  {
+   "id": 807,
+   "name": "Increase USB Polling Priority",
+   "category": "Input",
+   "risk": "low"
+  },
+  {
+   "id": 808,
+   "name": "Disable USB Power Management for HID",
+   "category": "Input",
+   "risk": "low"
+  },
+  {
+   "id": 809,
+   "name": "Reduce Boot Menu Timeout",
+   "category": "Boot",
+   "risk": "low"
+  },
+  {
+   "id": 810,
+   "name": "Disable Boot Menu GUI",
+   "category": "Boot",
+   "risk": "low"
+  },
+  {
+   "id": 811,
+   "name": "Disable Boot Splash Screen",
+   "category": "Boot",
+   "risk": "low"
+  },
+  {
+   "id": 812,
+   "name": "Disable Windows Boot Tracing",
+   "category": "Boot",
+   "risk": "low"
+  },
+  {
+   "id": 813,
+   "name": "Disable Boot Status Policy Recovery Prompts",
+   "category": "Boot",
+   "risk": "low"
+  },
+  {
+   "id": 814,
+   "name": "Disable Verbose Startup Status Messages",
+   "category": "Boot",
+   "risk": "low"
+  },
+  {
+   "id": 815,
+   "name": "Enable Fast Boot Without Hibernate",
+   "category": "Boot",
+   "risk": "low"
+  },
+  {
+   "id": 816,
+   "name": "Disable Startup Repair Auto Launch",
+   "category": "Boot",
+   "risk": "low"
+  },
+  {
+   "id": 817,
+   "name": "Set Boot Timeout to 3 Seconds",
+   "category": "Boot",
+   "risk": "low"
+  },
+  {
+   "id": 818,
+   "name": "Disable Driver Signature Boot Check",
+   "category": "Boot",
+   "risk": "high"
+  },
+  {
+   "id": 819,
+   "name": "Disable Kernel Debugging",
+   "category": "Boot",
+   "risk": "low"
+  },
+  {
+   "id": 820,
+   "name": "Disable Automatic Reboot on System Failure",
+   "category": "Boot",
+   "risk": "low"
+  },
+  {
+   "id": 821,
+   "name": "Disable Crash Dump Creation",
+   "category": "Boot",
+   "risk": "high"
+  },
+  {
+   "id": 822,
+   "name": "Set Crash Dump to Minimal Memory Dump",
+   "category": "Boot",
+   "risk": "low"
+  },
+  {
+   "id": 823,
+   "name": "Set Time Server to time.cloudflare.com",
+   "category": "Misc",
+   "risk": "low"
+  },
+  {
+   "id": 824,
+   "name": "Set System Clock to UTC for Dual Boot",
+   "category": "Misc",
+   "risk": "low"
+  },
+  {
+   "id": 825,
+   "name": "Enable Automatic Time Sync Interval Faster",
+   "category": "Misc",
+   "risk": "low"
+  },
+  {
+   "id": 826,
+   "name": "Disable Windows Time Service on Offline PCs",
+   "category": "Misc",
+   "risk": "low"
+  },
+  {
+   "id": 827,
+   "name": "Disable Delivery of Windows Spotlight Content",
+   "category": "Misc",
+   "risk": "low"
+  },
+  {
+   "id": 828,
+   "name": "Disable Online Content in File Explorer Search",
+   "category": "Misc",
+   "risk": "low"
+  },
+  {
+   "id": 829,
+   "name": "Disable Typing Insights",
+   "category": "Misc",
+   "risk": "low"
+  },
+  {
+   "id": 830,
+   "name": "Disable Emoji Panel Suggestions",
+   "category": "Misc",
+   "risk": "low"
+  },
+  {
+   "id": 831,
+   "name": "Disable Voice Typing Shortcut",
+   "category": "Misc",
+   "risk": "low"
+  },
+  {
+   "id": 832,
+   "name": "Disable Windows Narrator Shortcut",
+   "category": "Misc",
+   "risk": "low"
+  },
+  {
+   "id": 833,
+   "name": "Disable High Contrast Shortcut",
+   "category": "Misc",
+   "risk": "low"
+  },
+  {
+   "id": 834,
+   "name": "Disable Accessibility Shortcut Keys",
+   "category": "Misc",
+   "risk": "low"
+  },
+  {
+   "id": 835,
+   "name": "Disable Windows Error Dialog Popups",
+   "category": "Misc",
+   "risk": "low"
+  },
+  {
+   "id": 836,
+   "name": "Disable Application Crash Dialogs",
+   "category": "Misc",
+   "risk": "low"
+  },
+  {
+   "id": 837,
+   "name": "Disable Show Hidden Notification Area Overflow",
+   "category": "Misc",
+   "risk": "low"
+  },
+  {
+   "id": 838,
+   "name": "Always Show All Tray Icons",
+   "category": "Misc",
+   "risk": "low"
+  },
+  {
+   "id": 839,
+   "name": "Disable Automatic Folder Discovery",
+   "category": "Misc",
+   "risk": "low"
+  },
+  {
+   "id": 840,
+   "name": "Disable Online Speech Privacy Policy Prompt",
+   "category": "Misc",
+   "risk": "low"
+  },
+  {
+   "id": 841,
+   "name": "Disable Windows Feedback Frequency",
+   "category": "Misc",
+   "risk": "low"
+  },
+  {
+   "id": 842,
+   "name": "Disable Windows Experience Improvement Tracking",
+   "category": "Misc",
+   "risk": "low"
+  }
+ ]
+}
