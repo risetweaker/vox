@@ -17,20 +17,69 @@ const unsupported: Tweak = {
 
 describe("catalog Apply All planning", () => {
   it("maps only the exact verified record on a supported Windows desktop", () => {
-    const plan = buildApplyPlan([mapped, unsupported], "Windows", true, true, false);
+    const plan = buildApplyPlan([mapped, unsupported], "Windows", true, true, []);
 
     expect(plan.items.map(({ status }) => status)).toEqual(["ready", "unsupported"]);
     expect(plan.actionIds).toEqual(["reduce-ui-motion"]);
+  });
+
+  it("registers the reversible visual and Explorer mappings", () => {
+    const items: Tweak[] = [
+      { id: 176, name: "Disable Transparency Effects", category: "Visual", risk: "low" },
+      mapped,
+      { id: 185, name: "Enable Dark Mode", category: "Visual", risk: "low" },
+      { id: 201, name: "Show File Extensions", category: "Explorer", risk: "low" },
+      { id: 202, name: "Show Hidden Files", category: "Explorer", risk: "low" },
+      { id: 204, name: "Open Explorer to This PC", category: "Explorer", risk: "low" },
+      { id: 205, name: "Disable Quick Access Recent Files", category: "Explorer", risk: "low" },
+      { id: 206, name: "Disable Quick Access Frequent Folders", category: "Explorer", risk: "low" },
+    ];
+    const plan = buildApplyPlan(items, "Windows", true, true, []);
+
+    expect(plan.items.map(({ status }) => status)).toEqual(items.map(() => "ready"));
+    expect(plan.actionIds).toEqual([
+      "disable-transparency",
+      "reduce-ui-motion",
+      "enable-dark-mode",
+      "show-file-extensions",
+      "show-hidden-files",
+      "explorer-this-pc",
+      "disable-quick-access-recent",
+      "disable-quick-access-frequent",
+    ]);
+    expect(plan.items.find((item) => item.id === 202)?.warning).toContain("hidden files");
+  });
+
+  it("reports each mapped outcome when a multi-action batch fails partway through", async () => {
+    const items: Tweak[] = [
+      { id: 176, name: "Disable Transparency Effects", category: "Visual", risk: "low" },
+      mapped,
+      { id: 185, name: "Enable Dark Mode", category: "Visual", risk: "low" },
+      { id: 201, name: "Show File Extensions", category: "Explorer", risk: "low" },
+    ];
+    const plan = buildApplyPlan(items, "Windows", true, true, []);
+    const applyAction = vi.fn(async (actionId: string) => {
+      if (actionId === "enable-dark-mode") throw new Error("registry write failed");
+    });
+    const result = await executeApplyPlan(plan, applyAction);
+
+    expect(applyAction.mock.calls.map(([actionId]) => actionId)).toEqual([
+      "disable-transparency",
+      "reduce-ui-motion",
+      "enable-dark-mode",
+    ]);
+    expect(result.items.map(({ status }) => status)).toEqual(["applied", "applied", "failed", "not-run"]);
+    expect(result.failure?.actionId).toBe("enable-dark-mode");
   });
 
   it("does not map near matches, other platforms, or unavailable desktop actions", () => {
     const renamed = { ...mapped, name: "Disable Every Animation" };
     const changedCategory = { ...mapped, category: "Performance" };
 
-    expect(buildApplyPlan([renamed, changedCategory], "Windows", true, true, false).actionIds).toEqual([]);
-    expect(buildApplyPlan([mapped], "Linux", true, true, false).items[0].status).toBe("unsupported");
-    expect(buildApplyPlan([mapped], "Windows", true, false, false).items[0].status).toBe("unavailable");
-    expect(buildApplyPlan([mapped], "Windows", false, false, false).items[0].status).toBe("unavailable");
+    expect(buildApplyPlan([renamed, changedCategory], "Windows", true, true, []).actionIds).toEqual([]);
+    expect(buildApplyPlan([mapped], "Linux", true, true, []).items[0].status).toBe("unsupported");
+    expect(buildApplyPlan([mapped], "Windows", true, false, []).items[0].status).toBe("unavailable");
+    expect(buildApplyPlan([mapped], "Windows", false, false, []).items[0].status).toBe("unavailable");
   });
 
   it("refuses an unregistered ready item even if a caller fabricates a plan", async () => {
@@ -48,7 +97,7 @@ describe("catalog Apply All planning", () => {
   });
 
   it("makes no native call and reports unsupported entries when nothing is mapped", async () => {
-    const plan = buildApplyPlan([unsupported], "macOS", true, true, false);
+    const plan = buildApplyPlan([unsupported], "macOS", true, true, []);
     const applyAction = vi.fn(async () => undefined);
     const result = await executeApplyPlan(plan, applyAction);
 
@@ -58,7 +107,7 @@ describe("catalog Apply All planning", () => {
   });
 
   it("applies only registered actions and reports each item's outcome", async () => {
-    const plan = buildApplyPlan([mapped, unsupported], "Windows", true, true, false);
+    const plan = buildApplyPlan([mapped, unsupported], "Windows", true, true, []);
     const applyAction = vi.fn(async () => undefined);
     const result = await executeApplyPlan(plan, applyAction);
 
@@ -68,7 +117,7 @@ describe("catalog Apply All planning", () => {
   });
 
   it("does not reapply an action already applied through the standalone control", async () => {
-    const plan = buildApplyPlan([mapped], "Windows", true, true, true);
+    const plan = buildApplyPlan([mapped], "Windows", true, true, ["reduce-ui-motion"]);
     const applyAction = vi.fn(async () => undefined);
     const result = await executeApplyPlan(plan, applyAction);
 
@@ -77,7 +126,7 @@ describe("catalog Apply All planning", () => {
   });
 
   it("does not report a failed native action as applied", async () => {
-    const plan = buildApplyPlan([mapped], "Windows", true, true, false);
+    const plan = buildApplyPlan([mapped], "Windows", true, true, []);
     const applyAction = vi.fn(async () => {
       throw new Error("write failed");
     });

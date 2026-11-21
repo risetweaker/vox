@@ -1,3 +1,4 @@
+use serde_json::Value;
 use std::process::{Command, Output};
 
 const SCHEMA: &str = "org.gnome.desktop.interface";
@@ -14,6 +15,10 @@ pub fn availability() -> Result<(), String> {
     } else {
         Err("The GNOME animation preference is unavailable; gsettings could not read it.".to_string())
     }
+}
+
+pub fn supports_action(action_id: &str) -> bool {
+    action_id == "reduce-ui-motion" && availability().is_ok()
 }
 
 fn run(args: &[&str]) -> Result<Output, String> {
@@ -70,4 +75,27 @@ pub fn restore_reduce_ui_motion(previous: Option<String>) -> Result<(), String> 
             String::from_utf8_lossy(&output.stderr)
         ))
     }
+}
+
+pub fn read_action(action_id: &str) -> Result<Value, String> {
+    if !supports_action(action_id) {
+        return Err("This action is unavailable on the current Linux desktop.".to_string());
+    }
+    serde_json::to_value(read_reduce_ui_motion()?).map_err(|error| error.to_string())
+}
+
+pub fn apply_action(action_id: &str) -> Result<(), String> {
+    if !supports_action(action_id) {
+        return Err("This action is unavailable on the current Linux desktop.".to_string());
+    }
+    set_reduce_ui_motion(true)
+}
+
+pub fn restore_action(action_id: &str, previous: Value) -> Result<(), String> {
+    if !supports_action(action_id) {
+        return Err("This action is unavailable on the current Linux desktop.".to_string());
+    }
+    let previous = serde_json::from_value(previous)
+        .map_err(|error| format!("The saved Linux rollback record is invalid: {error}"))?;
+    restore_reduce_ui_motion(previous)
 }

@@ -2,7 +2,25 @@ import type { Tweak } from "./catalog";
 
 const ACTION_ID = "reduce-ui-motion";
 
-const CATALOG_MAPPINGS = [
+interface CatalogMapping {
+  id: number;
+  name: string;
+  category: string;
+  risk: Tweak["risk"];
+  platform: string;
+  actionId: string;
+  warning?: string;
+}
+
+const CATALOG_MAPPINGS: CatalogMapping[] = [
+  {
+    id: 176,
+    name: "Disable Transparency Effects",
+    category: "Visual",
+    risk: "low",
+    platform: "Windows",
+    actionId: "disable-transparency",
+  },
   {
     id: 177,
     name: "Disable Window Animations",
@@ -11,7 +29,58 @@ const CATALOG_MAPPINGS = [
     platform: "Windows",
     actionId: ACTION_ID,
   },
-] as const;
+  {
+    id: 185,
+    name: "Enable Dark Mode",
+    category: "Visual",
+    risk: "low",
+    platform: "Windows",
+    actionId: "enable-dark-mode",
+  },
+  {
+    id: 201,
+    name: "Show File Extensions",
+    category: "Explorer",
+    risk: "low",
+    platform: "Windows",
+    actionId: "show-file-extensions",
+  },
+  {
+    id: 202,
+    name: "Show Hidden Files",
+    category: "Explorer",
+    risk: "low",
+    platform: "Windows",
+    actionId: "show-hidden-files",
+    warning: "This displays hidden files but does not change the separate protected-operating-system-files setting.",
+  },
+  {
+    id: 204,
+    name: "Open Explorer to This PC",
+    category: "Explorer",
+    risk: "low",
+    platform: "Windows",
+    actionId: "explorer-this-pc",
+  },
+  {
+    id: 205,
+    name: "Disable Quick Access Recent Files",
+    category: "Explorer",
+    risk: "low",
+    platform: "Windows",
+    actionId: "disable-quick-access-recent",
+    warning: "This hides the recent-files list; it does not erase existing file history.",
+  },
+  {
+    id: 206,
+    name: "Disable Quick Access Frequent Folders",
+    category: "Explorer",
+    risk: "low",
+    platform: "Windows",
+    actionId: "disable-quick-access-frequent",
+    warning: "This hides the frequent-folders list; it does not erase existing file history.",
+  },
+];
 
 export type BatchItemStatus =
   | "ready"
@@ -30,6 +99,7 @@ export interface BatchItemResult {
   status: BatchItemStatus;
   actionId?: string;
   platform?: string;
+  warning?: string;
 }
 
 export interface ApplyPlan {
@@ -47,7 +117,7 @@ export function buildApplyPlan(
   platform: string,
   nativeRuntime: boolean,
   nativeActionSupported: boolean,
-  actionAlreadyApplied: boolean,
+  appliedActionIds: string[],
 ): ApplyPlan {
   const items = tweaks.map((tweak): BatchItemResult => {
     const mapping = CATALOG_MAPPINGS.find(
@@ -57,16 +127,24 @@ export function buildApplyPlan(
         candidate.category === tweak.category &&
         candidate.risk === tweak.risk,
     );
-    if (!mapping || mapping.platform !== platform) {
+    if (!mapping) {
       return { id: tweak.id, name: tweak.name, category: tweak.category, risk: tweak.risk, status: "unsupported" };
     }
+    if (mapping.platform !== platform) {
+      return {
+        ...tweak,
+        status: "unsupported",
+        platform: mapping.platform,
+        warning: `This verified action is available on ${mapping.platform} only.`,
+      };
+    }
     if (!nativeRuntime || !nativeActionSupported) {
-      return { id: tweak.id, name: tweak.name, category: tweak.category, risk: tweak.risk, status: "unavailable" };
+      return { ...tweak, status: "unavailable", platform: mapping.platform, warning: mapping.warning };
     }
-    if (actionAlreadyApplied) {
-      return { ...tweak, status: "already-applied", actionId: mapping.actionId, platform: mapping.platform };
+    if (appliedActionIds.includes(mapping.actionId)) {
+      return { ...tweak, status: "already-applied", actionId: mapping.actionId, platform: mapping.platform, warning: mapping.warning };
     }
-    return { ...tweak, status: "ready", actionId: mapping.actionId, platform: mapping.platform };
+    return { ...tweak, status: "ready", actionId: mapping.actionId, platform: mapping.platform, warning: mapping.warning };
   });
 
   const actionIds = [...new Set(items.flatMap((item) => item.status === "ready" && item.actionId ? [item.actionId] : []))];

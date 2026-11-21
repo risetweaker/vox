@@ -6,9 +6,9 @@ VOX is a cross-platform desktop utility with a responsive companion web interfac
 
 - Free and Premium catalog import, search, category/risk filters, and metadata display.
 - Strict catalog parsing. The only imported fields used are `id`, `name`, `category`, and `risk`; extra fields such as scripts or commands are ignored.
-- A review-and-confirm Apply All flow that identifies supported work and explicitly skips unsupported catalog items.
-- One exact Free/Premium catalog mapping on Windows: ID 177, “Disable Window Animations”, backed by the reversible current-user animation preference. The same row is unsupported on macOS and Linux.
-- One reviewed, reversible action: enable the operating system's reduced-motion preference for the current user. VOX backs up the previous setting before changing it.
+- A review-and-confirm Apply All flow that identifies supported work, requires confirmation, reports per-item outcomes, and explicitly skips unsupported catalog items.
+- Eight exact Free/Premium catalog mappings on Windows: IDs 176, 177, 185, 201, 202, 204, 205, and 206. These are current-user visual and Explorer preferences with local rollback records; all other catalog rows remain unsupported.
+- One standalone, reviewed Reduce UI Motion action for Windows, macOS, and GNOME/Linux. It is separate from the catalog Apply All allowlist and backs up the previous setting before changing it.
 - Platform-specific Windows, macOS, and GNOME/Linux implementations under `src-tauri/src/platform/`.
 - Supabase Google OAuth entry point and server-controlled Premium access check.
 - In-app FAQ and dark blue responsive interface.
@@ -36,7 +36,7 @@ The web build is a preview and catalog browser. System settings can only be chan
 
 Use the **Import Free JSON** or **Import Premium JSON** control and select the corresponding supplied file. Parsing is local to the browser. Files have a 2 MB limit, a 2,000-record limit, duplicate IDs and invalid metadata are rejected, and unknown fields are discarded. Catalog names, categories, and risks are displayed as text only.
 
-Catalog presence and an entry's low/medium/high risk label do not make a tweak safe. The exact ID/name/category/risk tuple for ID 177 is the only imported mapping; it is available on Windows only and shares the reversible `MinAnimate` preference with the standalone Reduce UI Motion control. Other catalog records remain unavailable. VOX does not disable antivirus, firewall, UAC, security updates, or other security protections.
+Catalog presence and an entry's low/medium/high risk label do not make a tweak safe. The exact ID/name/category/risk tuples for IDs 176, 177, 185, 201, 202, 204, 205, and 206 are the only imported mappings; they are available on Windows only. Each action uses fixed registry paths and value names, validates prior values, and stores its rollback data locally. Showing hidden files does not change Windows' separate protected-operating-system-files setting. The standalone Reduce UI Motion control remains separate; on Windows it uses the reversible `MinAnimate` preference, which is also the mechanism used by catalog ID 177. Other catalog records remain unsupported. VOX does not disable antivirus, firewall, UAC, security updates, or other security protections.
 
 ## Authentication and Premium
 
@@ -54,9 +54,10 @@ The existing URL https://vox-tweaking-utility.netlify.app/ is linked as the prod
 
 ## Platform action details
 
-- **Windows:** updates `HKCU\Control Panel\Desktop\WindowMetrics\MinAnimate`; no elevation is requested.
+- **Windows standalone Reduce UI Motion / catalog ID 177:** updates `HKCU\Control Panel\Desktop\WindowMetrics\MinAnimate`; no elevation is requested.
+- **Windows catalog IDs 176, 185, 201, 202, 204, 205, and 206:** update only the current user's Personalize or Explorer Advanced preferences (transparency, light/dark theme, extension visibility, hidden-file visibility, Explorer start location, and Quick Access recent/frequent lists). They do not clear file history or change system-wide policy. Each action saves and validates its old value before writing; use the per-item Undo control to restore it.
 - **macOS:** sets `com.apple.universalaccess reduceMotion` with `defaults`.
 - **Linux:** on GNOME sessions, changes `org.gnome.desktop.interface enable-animations` with `gsettings`; other desktop environments are reported unsupported.
-- Each implementation reads and stores the pre-change value locally before applying. Undo restores that value. If a preference cannot be read, written, or restored, VOX shows an error rather than claiming success.
+- Each implementation reads and stores the pre-change value locally before applying. Undo restores that value. If a preference cannot be read, written, or restored, VOX shows an error rather than claiming success. The imported catalog mappings are Windows-only; macOS/Linux catalog rows stay visibly unsupported.
 
-The desktop application has no shell plugin and does not execute catalog text. Native calls accept only the fixed `reduce-ui-motion` action identifier.
+The desktop application has no shell plugin and does not execute catalog text. Native calls accept only fixed action identifiers, and platform-specific implementations are isolated under `src-tauri/src/platform/`.

@@ -29,7 +29,7 @@ import {
 } from "lucide-react";
 import type { Session } from "@supabase/supabase-js";
 import { authConfigured, signInWithGoogle, supabase } from "./auth";
-import { buildApplyPlan, executeApplyPlan, type ApplyPlan, type BatchExecution, type BatchItemStatus } from "./batch";
+import { buildApplyPlan, executeApplyPlan, type ApplyPlan, type BatchExecution, type BatchItemResult, type BatchItemStatus } from "./batch";
 import { formatCount, parseCatalog, type Catalog, type CatalogTier, type Tweak } from "./catalog";
 
 type Page = "overview" | "tweaks" | "faq" | "settings";
@@ -38,6 +38,7 @@ type PlatformRuntime = {
   actionSupported: boolean;
   actionUnavailableReason: string | null;
   actionApplied: boolean;
+  appliedActions?: string[];
 };
 type ApplySummary = { tier: CatalogTier; result: BatchExecution };
 type PendingApply = { tier: CatalogTier; plan: ApplyPlan };
@@ -53,7 +54,7 @@ const FAQ_ITEMS = [
   {
     question: "Can I undo a change?",
     answer:
-      "The verified Reduce UI Motion action saves the existing preference on this device before changing it. Use Undo from the Tweaks page to restore that saved value. The backup remains local to this app installation.",
+      "Each supported catalog action saves its current-user preference before changing it. Use the per-item Undo button to restore that saved value. Backups remain local to this app installation.",
   },
   {
     question: "Why are imported tweaks marked unsupported?",
@@ -140,6 +141,7 @@ function App() {
         actionSupported: false,
         actionUnavailableReason: "Open the VOX desktop app to apply system-level settings.",
         actionApplied: false,
+        appliedActions: [],
       });
       return;
     }
@@ -157,7 +159,7 @@ function App() {
         runtime?.platform ?? "Unknown",
         isNative,
         Boolean(runtime?.actionSupported),
-        Boolean(runtime?.actionApplied),
+        runtime?.appliedActions ?? (runtime?.actionApplied ? [ACTION_ID] : []),
       ),
     [catalog, isNative, runtime],
   );
@@ -226,7 +228,7 @@ function App() {
       const alreadyApplied = applyPlan.items.some((item) => item.status === "already-applied");
       const unavailable = applyPlan.items.some((item) => item.status === "unavailable");
       const message = alreadyApplied
-        ? "The mapped catalog action is already applied. No new system changes were made."
+        ? "All mapped catalog actions are already applied. No new system changes were made."
         : unavailable
           ? "A verified catalog mapping exists, but system actions are unavailable in this preview or runtime. No system changes were made."
           : `No imported catalog tweaks have a verified mapping for ${runtime?.platform ?? "this platform"}. No system changes were made.`;
@@ -276,14 +278,16 @@ function App() {
     }
   }
 
-  async function undoAction() {
+  async function undoAction(actionId: string = ACTION_ID) {
     setBusy(true);
     setError("");
     setNotice("");
     try {
-      await invoke("undo_action", { actionId: ACTION_ID });
+      await invoke("undo_action", { actionId });
       setLastRun(null);
-      setNotice("The original Reduce UI Motion preference has been restored.");
+      setNotice(actionId === ACTION_ID
+        ? "The original Reduce UI Motion preference has been restored."
+        : "The previous catalog preference has been restored.");
       await refreshRuntime();
     } catch (cause) {
       setError(errorMessage(cause));
@@ -351,7 +355,7 @@ function App() {
             onNavigate={navigate}
             onImport={() => freeFile.current?.click()}
             onApply={() => void applyStandalone()}
-            onUndo={() => void undoAction()}
+            onUndo={() => void undoAction(ACTION_ID)}
             busy={busy}
           />}
           {page === "tweaks" && <Tweaks
@@ -371,7 +375,8 @@ function App() {
             onImportFree={() => freeFile.current?.click()}
             onImportPremium={() => premiumFile.current?.click()}
             onApply={requestApplyAll}
-            onUndo={() => void undoAction()}
+            onUndo={() => void undoAction(ACTION_ID)}
+            onUndoAction={(actionId) => void undoAction(actionId)}
             onSignIn={() => void signIn()}
             lastRun={lastRun?.tier === tier ? lastRun : null}
             applyPlan={applyPlan}
@@ -407,9 +412,9 @@ function App() {
           <div className="eyebrow">REVIEW BEFORE APPLYING</div>
           <h2 id="apply-title">Apply mapped catalog tweaks?</h2>
           <p>Only these exact, verified catalog entries will run for your current user. Unsupported entries will be skipped.</p>
-          {pendingApply.plan.items.filter((item) => item.status === "ready").map((item) => <div className="preview-row" key={item.id}><div className="preview-icon"><Eye size={17} /></div><div><strong>{item.name}</strong><small>Catalog ID {item.id} · {pendingApply.tier} · {runtime?.platform} · reversible</small></div><span className="eligible-tag">SUPPORTED</span></div>)}
+          {pendingApply.plan.items.filter((item) => item.status === "ready").map((item) => <div className="preview-row" key={item.id}><div className="preview-icon"><Eye size={17} /></div><div><strong>{item.name}</strong><small>Catalog ID {item.id} · {pendingApply.tier} · {runtime?.platform} · reversible</small>{item.warning && <small style={{ color: "#e1b466" }}>{item.warning}</small>}</div><span className="eligible-tag">SUPPORTED</span></div>)}
           <div className="preview-row muted-row"><div className="preview-icon"><FileJson2 size={17} /></div><div><strong>{pendingApply.plan.items.filter((item) => item.status === "unsupported" || item.status === "unavailable").length} unsupported or unavailable records</strong><small>These have no exact mapping here or cannot run in this app context.</small></div><span className="skip-tag">SKIPPED</span></div>
-          <div className="modal-warning"><Shield size={15} /> No administrator permission is requested. No catalog command or script will run.</div>
+          <div className="modal-warning"><Shield size={15} /> No administrator permission is requested. No catalog command or script will run. Some visual or Explorer changes may require reopening the affected app.</div>
           <div className="modal-actions"><button className="button button-quiet" onClick={() => { setModal(null); setPendingApply(null); }}>Cancel</button><button className="button button-primary" disabled={busy || pendingApply.plan.actionIds.length === 0} onClick={() => void confirmApplyAll()}><Bolt size={16} /> Confirm &amp; apply</button></div>
         </section>
       </div>}
@@ -425,6 +430,7 @@ function Overview(props: {
   onImport: () => void;
   onApply: () => void;
   onUndo: () => void;
+  onUndoAction: (actionId: string) => void;
   busy: boolean;
 }) {
   const { runtime, catalogCount, premium, onNavigate, onImport, onApply, onUndo, busy } = props;
@@ -446,7 +452,7 @@ function Overview(props: {
       <section className="stats-grid">
         <StatCard icon={Monitor} label="YOUR PLATFORM" value={runtime?.platform ?? "Checking…"} meta={runtime?.actionSupported ? "Native actions available" : runtime?.actionUnavailableReason ?? "Detecting platform"} accent="blue" />
         <StatCard icon={SlidersHorizontal} label="CATALOG RECORDS" value={String(catalogCount)} meta={catalogCount ? "Imported metadata · not all executable" : "Import the supplied JSON catalog"} accent="violet" />
-        <StatCard icon={Shield} label="VERIFIED ACTIONS" value={runtime?.actionSupported ? "1 available" : "Preview only"} meta={runtime?.actionApplied ? "Reduce UI Motion is applied" : "Review every action before use"} accent="mint" />
+        <StatCard icon={Shield} label="VERIFIED ACTIONS" value={runtime?.actionSupported ? runtime.platform === "Windows" ? "8 catalog mappings" : "1 standalone action" : "Preview only"} meta={runtime?.actionApplied ? "Reduce UI Motion is applied" : runtime?.platform === "Windows" ? "Current-user Windows preferences" : "Catalog mappings are Windows only"} accent="mint" />
         <StatCard icon={Sparkles} label="YOUR PLAN" value={premium ? "Premium" : "Free"} meta={premium ? "Premium access verified" : "Upgrade access is server-managed"} accent="gold" />
       </section>
 
@@ -488,7 +494,7 @@ function Tweaks(props: {
   runtime: PlatformRuntime | null;
   busy: boolean;
 }) {
-  const { tier, setTier, premium, catalog, visibleTweaks, categories, search, setSearch, category, setCategory, onImportFree, onImportPremium, onApply, onUndo, onSignIn, lastRun, applyPlan, runtime, busy } = props;
+  const { tier, setTier, premium, catalog, visibleTweaks, categories, search, setSearch, category, setCategory, onImportFree, onImportPremium, onApply, onUndo, onUndoAction, onSignIn, lastRun, applyPlan, runtime, busy } = props;
   const [riskFilter, setRiskFilter] = useState("All risk levels");
   const filtered = visibleTweaks.filter((item) => riskFilter === "All risk levels" || item.risk === riskFilter.toLowerCase());
   const displayedResults = lastRun?.result.items ?? applyPlan.items;
@@ -509,7 +515,7 @@ function Tweaks(props: {
           <div className="catalog-summary"><div><strong>{tier === "free" ? "Free" : "Premium"} catalog</strong><span>{formatCount(catalog)} · {unsupportedCount} unsupported or unavailable on {runtime?.platform ?? "this platform"}</span></div><span className="unsupported-count"><span className="status-dot" /> {unsupportedCount} unsupported/unavailable</span></div>
           {lastRun && <div className={`batch-result ${lastRun.result.failure ? "batch-failure" : ""}`}><Check size={16} /><span><strong>Apply All results</strong>          <small>{lastRun.result.items.filter((item) => item.status === "applied").length} applied · {lastRun.result.items.filter((item) => item.status === "unsupported" || item.status === "unavailable").length} skipped as unsupported/unavailable · {lastRun.result.items.filter((item) => item.status === "already-applied").length} already applied{lastRun.result.failure ? " · one action failed" : ""}</small></span><BadgeCheck size={16} /></div>}
           <div className="filter-bar"><label className="search-field"><Search size={16} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search tweaks..." /></label><label className="select-field"><span className="sr-only">Category</span><span className="select-value">{category}</span><select value={category} onChange={(event) => setCategory(event.target.value)}>{categories.map((item) => <option key={item}>{item}</option>)}</select><ChevronDown size={14} /></label><label className="select-field"><span className="sr-only">Risk level</span><span className="select-value">{riskFilter}</span><select value={riskFilter} onChange={(event) => setRiskFilter(event.target.value)}><option>All risk levels</option><option>Low</option><option>Medium</option><option>High</option></select><ChevronDown size={14} /></label></div>
-          <div className="tweak-list">{filtered.slice(0, 100).map((item) => <TweakRow key={`${tier}-${item.id}`} item={item} outcome={displayedResults.find((result) => result.id === item.id)?.status ?? "unsupported"} wasRun={Boolean(lastRun)} />)}</div>
+          <div className="tweak-list">{filtered.slice(0, 100).map((item) => <TweakRow key={`${tier}-${item.id}`} item={item} result={displayedResults.find((result) => result.id === item.id)} wasRun={Boolean(lastRun)} onUndoAction={onUndoAction} busy={busy} rollbackAvailable={Boolean(runtime?.appliedActions?.includes(displayedResults.find((result) => result.id === item.id)?.actionId ?? ""))} />)}</div>
           {filtered.length > 100 && <div className="list-limit">Showing first 100 matches. Refine your search to see other entries.</div>}
           {filtered.length === 0 && <div className="empty-state"><Search size={22} /><strong>No matching tweaks</strong><span>Try a different search or category.</span></div>}
         </> : <div className="empty-state"><FileJson2 size={24} /><strong>No {tier} catalog loaded</strong><span>Choose the matching JSON file to inspect its metadata. Files are read locally and never uploaded.</span><button className="button button-quiet button-small" onClick={tier === "free" ? onImportFree : onImportPremium} disabled={tier === "premium" && !premium}><CloudUpload size={15} /> Select {tier} JSON</button></div>}
@@ -523,17 +529,20 @@ function catalogsCountLabel(current?: Catalog) {
   return current ? formatCount(current) : "Not imported";
 }
 
-function TweakRow({ item, outcome, wasRun }: { item: Tweak; outcome: BatchItemStatus; wasRun: boolean }) {
+function TweakRow({ item, result, wasRun, onUndoAction, busy, rollbackAvailable }: { item: Tweak; result?: BatchItemResult; wasRun: boolean; onUndoAction: (actionId: string) => void; busy: boolean; rollbackAvailable: boolean }) {
+  const outcome = result?.status ?? "unsupported";
   const outcomeLabel: Record<BatchItemStatus, string> = {
     ready: "Mapped · ready",
-    unsupported: wasRun ? "Skipped · unsupported" : "No verified mapping",
+    unsupported: wasRun ? "Skipped · unsupported" : result?.platform ? `${result.platform} only` : "No verified mapping",
     unavailable: "Unavailable in this app",
     "already-applied": "Already applied",
     applied: "Applied",
     failed: "Failed",
     "not-run": "Not run",
   };
-  return <article className="tweak-row"><div className="tweak-category-icon"><Settings2 size={16} /></div><div className="tweak-info"><strong>{item.name}</strong><small>{item.category}</small></div><span className={`risk-pill risk-${item.risk}`}>{item.risk}</span><span className={`unsupported-pill outcome-${outcome}`}>{outcomeLabel[outcome]}</span><button className="icon-button disabled-icon" aria-label={outcomeLabel[outcome]} title={outcomeLabel[outcome]}><LockKeyhole size={15} /></button></article>;
+  const actionId = result?.actionId;
+  const undoable = actionId !== undefined && rollbackAvailable;
+  return <article className="tweak-row"><div className="tweak-category-icon"><Settings2 size={16} /></div><div className="tweak-info"><strong>{item.name}</strong><small title={result?.warning}>{item.category}{result?.warning ? ` · ${result.warning}` : ""}</small></div><span className={`risk-pill risk-${item.risk}`}>{item.risk}</span><span className={`unsupported-pill outcome-${outcome}`}>{outcomeLabel[outcome]}</span>{undoable ? <button className="button button-quiet button-small tweak-undo" onClick={() => onUndoAction(actionId)} disabled={busy}><Undo2 size={13} /> Undo</button> : <button className="icon-button disabled-icon" aria-label={outcomeLabel[outcome]} title={outcomeLabel[outcome]} disabled><LockKeyhole size={15} /></button>}</article>;
 }
 
 function Faq() {

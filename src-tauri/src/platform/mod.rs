@@ -6,11 +6,11 @@ mod macos;
 mod linux;
 
 #[cfg(target_os = "windows")]
-pub use windows::{read_reduce_ui_motion, restore_reduce_ui_motion, set_reduce_ui_motion};
+pub use windows::{apply_action, read_action, restore_action, supports_action};
 #[cfg(target_os = "macos")]
-pub use macos::{read_reduce_ui_motion, restore_reduce_ui_motion, set_reduce_ui_motion};
+pub use macos::{apply_action, read_action, restore_action, supports_action};
 #[cfg(target_os = "linux")]
-pub use linux::{read_reduce_ui_motion, restore_reduce_ui_motion, set_reduce_ui_motion};
+pub use linux::{apply_action, read_action, restore_action, supports_action};
 
 #[cfg(target_os = "windows")]
 pub fn availability() -> (&'static str, Result<(), String>) {
@@ -33,16 +33,21 @@ pub fn availability() -> (&'static str, Result<(), String>) {
 }
 
 #[cfg(not(any(target_os = "windows", target_os = "macos", target_os = "linux")))]
-pub fn read_reduce_ui_motion() -> Result<Option<String>, String> {
+pub fn supports_action(_: &str) -> bool {
+    false
+}
+
+#[cfg(not(any(target_os = "windows", target_os = "macos", target_os = "linux")))]
+pub fn read_action(_: &str) -> Result<serde_json::Value, String> {
     Err("This operating system is not supported.".to_string())
 }
 
 #[cfg(not(any(target_os = "windows", target_os = "macos", target_os = "linux")))]
-pub fn set_reduce_ui_motion(_: bool) -> Result<(), String> {
+pub fn apply_action(_: &str) -> Result<(), String> {
     Err("This operating system is not supported.".to_string())
 }
 
 #[cfg(not(any(target_os = "windows", target_os = "macos", target_os = "linux")))]
-pub fn restore_reduce_ui_motion(_: Option<String>) -> Result<(), String> {
+pub fn restore_action(_: &str, _: serde_json::Value) -> Result<(), String> {
     Err("This operating system is not supported.".to_string())
 }
